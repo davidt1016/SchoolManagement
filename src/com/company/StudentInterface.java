@@ -4,31 +4,48 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
 
 public class StudentInterface extends JFrame {
-
-    private String[] term = {"2018 Fall","2018 Spring", "2019 Fall", "2019 Spring", "2020 Fall", "2020 Spring",
-            "2021 Fall","2021 Spring", "2022 Fall", "2022 Spring", "2023 Fall", "2023 Spring",
-            "2024 Fall","2024 Spring" };
+    //Dynamic Array for Storing All the Possible Courses for each Student
+    private Vector <String> courseEnrolled = new Vector<String>();
+    //For selecting the course
+    private static JComboBox coursesOptions;
+    private static JComboBox courseOptionsAttendance;
 
     //For Account Panel
     private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype,l_newpass,l_confirmpass,errorPass;
     private static JPasswordField newpass,confirmpass;
-    private ImageIcon icon;
+    private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String PassWord;
-    //For Grade Panel
-    private static JLabel gradeTitle, SemesterGrade, emptyRecord, course, grade, overallGPA;
-    private static JButton nextG, backG, overallG;
+
+    //For Grade interface
+    private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, overallGPA, refreshGrade;
+    private static JButton overallG, refreshG, enrol;
+    //Verifying a course has been selected for Grade panel
+    private Boolean isCourseGradeSelected = false;
+
+
     //For Attendance Panel
-    private static JLabel attendanceTitle, semesterAttendance, emptyAttendanceRecord;
-    private static JButton nextA, backA;
+    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
+    private static JButton refreshA;
+    //Verifying a course has been selected for Attendance panel
+    private Boolean isCourseAttendanceSelected = false;
 
     Container f;
     //**************Later need to put username and password in parameter in constructor to extract data***************
     //StudentInterface(String usrname, String passWord)
     StudentInterface(){
+
+        //Connection here with database to display information for Account, Grade, and Attendance
+        //For combo box, a list of courses taken by the students
+        courseEnrolled.add("-------------");
+        courseEnrolled.add("   SHOW ALL  ");
+
+
         setTitle("Student Interface");
         f = getContentPane();
 
@@ -50,7 +67,7 @@ public class StudentInterface extends JFrame {
         p.add(pa);
 
         //For grade panel
-        p_grade.setBounds( 30, 290, 420, 320);
+        p_grade.setBounds( 15, 290, 445, 320);
         p_grade.setBackground(Color.white);
         p.add(p_grade);
         p_grade.setLayout(null);
@@ -60,13 +77,111 @@ public class StudentInterface extends JFrame {
         grade.setBounds(180, 5, 60,30);
         p_grade.add(grade);
         //Semester Options for Grade
-        SemesterGrade = new JLabel("Term:");
-        SemesterGrade.setFont(new Font("Default", Font.PLAIN, 14));
-        SemesterGrade.setBounds(15,25, 70, 40);
-        p_grade.add(SemesterGrade);
+        CourseGrade = new JLabel("Select a Course to Display Grade:");
+        CourseGrade.setFont(new Font("Default", Font.PLAIN, 14));
+        CourseGrade.setBounds(10,30, 250, 40);
+        p_grade.add(CourseGrade);
+        //For selecting courses----ComboBox
+        coursesOptions = new JComboBox(courseEnrolled);
+        coursesOptions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //When the course JCombobox is triggered
+                if ( e.getSource() == coursesOptions )
+                {
+                    //No course has been selected
+                    if (coursesOptions.getSelectedItem() == "-------------")
+                    {
+                        isCourseGradeSelected = false;
+
+                    }
+                    //a course or show all option has been selected
+                    else
+                    {
+                        isCourseGradeSelected = true;
+                    }
+                }
+            }
+        });
+        coursesOptions.setBounds(235, 30, 160, 40);
+        p_grade.add(coursesOptions);
+        //For refresh Button Icon
+        refreshIcon = new ImageIcon(this.getClass().getResource("refresh.png"));
+        Image imRef = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        refreshIcon = new ImageIcon(imRef);
+        //Refresh Button
+        refreshG = new JButton(refreshIcon);
+        //When there is no record
+        emptyRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
+                "click SHOW ALL to display all <br> of the courses you have taken before.<br>" +
+                "If you are not enrol in any course, please click ENROLL button to add course.</html>");
+        emptyRecord.setBounds(60, 65, 300, 190);
+        emptyRecord.setFont(new Font("Default", Font.PLAIN, 14));
+        p_grade.add(emptyRecord);
+
+        //For Enrol button
+        enrol = new JButton("ENROLL");
+        enrol.setBounds(250, 250, 100, 40);
+        enrol.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //If enroll is called, then call another enroll interface
+                if ( e.getSource() == enrol )
+                {
+                    //Display Enrol GUI
+                    EnrollmentGUI eGUI = new  EnrollmentGUI();
+                }
+            }
+        });
+        p_grade.add(enrol);
+
+        //Action Listener when the REFRESH ICON is CLICKED for grade
+        refreshG.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Refresh Button is clicked
+                if ( e.getSource() == refreshG )
+                {
+                    //A course is selected, hide the emptyRecord messages
+                    if ( isCourseGradeSelected )
+                    {
+                        emptyRecord.setText(" ");
+                        overallGPA.setText(" ");
+                    }
+                    //Display all of the courses taken and their grade
+                    else
+                    {
+
+                    }
+                }
+            }
+        });
+        refreshG.setBounds(395, 40, 20, 20);
+        p_grade.add(refreshG);
+        //Overall GPA Display
+        overallGPA = new JLabel(" ");
+        overallGPA.setBounds(10, 70, 240, 30);
+        p_grade.add(overallGPA);
+
+        //For overall GPA button
+        overallG = new JButton("Overall GPA");
+        overallG.setBounds( 70, 250, 100, 40);
+        overallG.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Triggered when overall Grade Button is clicked
+                if (e.getSource() == overallG)
+                {
+                    //Displaying OVerall GPA message
+                    emptyRecord.setText( " ");
+                    overallGPA.setText("Your Cumulative (Overall) GPA is: ");
+                }
+            }
+        });
+        p_grade.add(overallG);
 
         //For attendance panel
-        p_attend.setBounds( 500, 290, 420, 320);
+        p_attend.setBounds( 490, 290, 445, 320);
         p_attend.setBackground(Color.white);
         p.add(p_attend);
         p_attend.setLayout(null);
@@ -75,10 +190,65 @@ public class StudentInterface extends JFrame {
         attendanceTitle.setBounds(160, 5, 120, 30);
         p_attend.add(attendanceTitle);
         //Semester Options for Attendance
-        semesterAttendance = new JLabel("Term:");
-        semesterAttendance.setFont(new Font("Default", Font.PLAIN, 14));
-        semesterAttendance.setBounds(15,25, 70, 40);
-        p_attend.add(semesterAttendance);
+        CourseAttendance = new JLabel("Select a Course to Display Attendance:");
+        CourseAttendance.setFont(new Font("Default", Font.PLAIN, 14));
+        CourseAttendance.setBounds(5,30, 270, 40);
+        p_attend.add(CourseAttendance);
+        //For selecting the course for Attendance
+        courseOptionsAttendance = new JComboBox(courseEnrolled);
+        courseOptionsAttendance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ( e.getSource() == courseOptionsAttendance )
+                {
+                    //No course has been selected
+                    if (courseOptionsAttendance.getSelectedItem() == "-------------")
+                    {
+                        isCourseAttendanceSelected = false;
+                    }
+                    //a course or show all option has been selected
+                    else
+                    {
+                        isCourseAttendanceSelected = true;
+                    }
+                }
+            }
+        });
+
+        //Empty Attendance Record
+        emptyAttendanceRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
+                "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
+        emptyAttendanceRecord.setBounds(70, 100, 300, 150);
+        emptyAttendanceRecord.setFont(new Font("Default", Font.PLAIN, 14));
+        p_attend.add(emptyAttendanceRecord);
+
+        //Course Selections for Attendance
+        courseOptionsAttendance.setBounds(265, 30, 160, 40);
+        p_attend.add(courseOptionsAttendance);
+        refreshA = new JButton(refreshIcon);
+        refreshA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Refresh for attendance button is pressed
+                if ( e.getSource()== refreshA)
+                {
+                    //a course has been selected or select ALL has been selected
+                    if(isCourseAttendanceSelected)
+                    {
+                        emptyAttendanceRecord.setText(" ");
+                    }
+                    //None has been selected
+                    else
+                    {
+
+                    }
+                }
+
+            }
+        });
+        refreshA.setBounds( 423, 40, 20, 20);
+        p_attend.add(refreshA);
+
 
         //Account UI
         l_image=new JLabel();
@@ -271,12 +441,8 @@ public class StudentInterface extends JFrame {
     //For Showing Messages after the Window has been disposed
     class WL implements WindowListener
     {
-
         @Override
-        public void windowOpened(WindowEvent e) {
-
-        }
-
+        public void windowOpened(WindowEvent e) { }
         @Override
         public void windowClosing(WindowEvent e) {
             int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
@@ -288,7 +454,6 @@ public class StudentInterface extends JFrame {
                 StudentInterface SI = new StudentInterface();
             }
         }
-
         @Override
         public void windowClosed(WindowEvent e) {
             int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
@@ -300,24 +465,13 @@ public class StudentInterface extends JFrame {
                 StudentInterface SI = new StudentInterface();
             }
         }
-
         @Override
-        public void windowIconified(WindowEvent e) {
-
-        }
-
+        public void windowIconified(WindowEvent e) { }
         @Override
-        public void windowDeiconified(WindowEvent e) {
-
-        }
-
+        public void windowDeiconified(WindowEvent e) { }
         @Override
-        public void windowActivated(WindowEvent e) {
-
-        }
-
+        public void windowActivated(WindowEvent e) { }
         @Override
-        public void windowDeactivated(WindowEvent e) {
-        }
+        public void windowDeactivated(WindowEvent e) { }
     }
 }

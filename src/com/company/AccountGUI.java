@@ -5,10 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,8 +17,6 @@ public class AccountGUI extends JFrame {
     private Boolean isValidType = false;
     private String[] UserType = {"----------------","Students", "Teachers"};
     private JComboBox usrT;
-    //For date
-    private String dateFormat = "yyyy/MM/dd";
     public Boolean isCreateAccount = false;
 
     private static Container frame;
