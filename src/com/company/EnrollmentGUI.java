@@ -13,8 +13,24 @@ public class EnrollmentGUI extends JFrame{
     private static JLabel title;
     private static JPanel panel, backgroundPanel;
     private static JButton enroll, cancel;
-    EnrollmentGUI()
+    private String userN = " ";
+
+    //Setter and getter for userName
+    //Setter for UserName
+    public void setusrN ( String userName )
     {
+        this.userN = userName;
+    }
+    //Getter for username
+    public String getusrN()
+    {
+        return userN;
+    }
+
+    //Constructor
+    EnrollmentGUI(String userName)
+    {
+        userN = userName;
         frame = getContentPane();
         setTitle("Course Enrollment");
 
@@ -51,7 +67,7 @@ public class EnrollmentGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if ( e.getSource() == cancel )
                 {
-                    StudentInterface sGUI = new StudentInterface();
+                    StudentInterface sGUI = new StudentInterface(userN);
                     dispose();
                 }
 
@@ -78,11 +94,12 @@ public class EnrollmentGUI extends JFrame{
             if(output == JOptionPane.YES_OPTION)
             {
                 JOptionPane.showMessageDialog(null , "Return to Student Interface");
+
             }
             else
             {
                 //Display the Enrollment Interface
-                EnrollmentGUI EGUI = new EnrollmentGUI();
+                EnrollmentGUI EGUI = new EnrollmentGUI(userN);
             }
         }
         @Override

@@ -33,11 +33,24 @@ public class StudentInterface extends JFrame {
     private static JButton refreshA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
-
+    //For storing usrname
+    private String usrN = " ";
+    //Setter and getter for userName
+    //Setter for UserName
+    public void setusrN ( String userName )
+    {
+        this.usrN = userName;
+    }
+    //Getter for username
+    public String getusrN()
+    {
+        return usrN;
+    }
     Container f;
     //**************Later need to put username and password in parameter in constructor to extract data***************
     //StudentInterface(String usrname, String passWord)
-    StudentInterface(){
+    StudentInterface(String usrName){
+        usrN = usrName;
 
         //Connection here with database to display information for Account, Grade, and Attendance
         //For combo box, a list of courses taken by the students
@@ -128,7 +141,7 @@ public class StudentInterface extends JFrame {
                 if ( e.getSource() == enrol )
                 {
                     //Display Enrol GUI
-                    EnrollmentGUI eGUI = new  EnrollmentGUI();
+                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN);
                 }
             }
         });
@@ -450,7 +463,7 @@ public class StudentInterface extends JFrame {
                 System.exit(1);
             }
             else{
-                StudentInterface SI = new StudentInterface();
+                StudentInterface SI = new StudentInterface(usrN);
             }
         }
         @Override
@@ -461,7 +474,7 @@ public class StudentInterface extends JFrame {
                 JOptionPane.showMessageDialog(null , "Return to Login Screen!");
             }
             else{
-                StudentInterface SI = new StudentInterface();
+                StudentInterface SI = new StudentInterface(usrN);
             }
         }
         @Override

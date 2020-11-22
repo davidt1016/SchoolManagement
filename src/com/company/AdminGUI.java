@@ -12,9 +12,24 @@ public class AdminGUI extends JFrame {
     private static JLabel label;
     private static JPanel panel;
 
-    //For displaying GUI
-    AdminGUI()
+    private String userN = " ";
+
+    //Setter and getter for userName
+    //Setter for UserName
+    public void setusrN ( String userName )
     {
+        this.userN = userName;
+    }
+    //Getter for username
+    public String getusrN()
+    {
+        return userN;
+    }
+    //For displaying GUI
+    AdminGUI(String usersName)
+    {
+        userN = usersName;
+
         setTitle("Administrator Interface");
         frame = getContentPane();
         label = new JLabel();
@@ -55,7 +70,7 @@ public class AdminGUI extends JFrame {
             }
             //No option: remain in the same interface with everything cleared out!!!
             else{
-                AdminGUI AdGUI = new AdminGUI();
+                AdminGUI AdGUI = new AdminGUI(userN);
             }
         }
         @Override

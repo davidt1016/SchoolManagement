@@ -20,9 +20,23 @@ public class TeacherGUI extends JFrame{
     private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
     private static JButton nextA, backA;
 
-    //For displaying GUI
-    TeacherGUI()
+    private String userN = " ";
+
+    //Setter and getter for userName
+    //Setter for UserName
+    public void setusrN ( String userName )
     {
+        this.userN = userName;
+    }
+    //Getter for username
+    public String getusrN()
+    {
+        return userN;
+    }
+    //For displaying GUI
+    TeacherGUI(String userName)
+    {
+        userN = userName;
         //Create instance of JPanel
         JPanel p=new JPanel();
         //For Grade Panel
@@ -103,7 +117,7 @@ public class TeacherGUI extends JFrame{
             }
             //No option: remain in the same interface with everything cleared out!!!
             else{
-                TeacherGUI tGUI = new TeacherGUI();
+                TeacherGUI tGUI = new TeacherGUI(userN);
             }
         }
         @Override

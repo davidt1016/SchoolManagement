@@ -90,7 +90,7 @@ public class Gui extends JFrame{
                 //Connection to Database Here
 
 
-                StudentInterface SI = new StudentInterface();
+                StudentInterface SI = new StudentInterface(username);
                 dispose();
             }
         });
