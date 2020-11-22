@@ -253,6 +253,9 @@ public class AccountGUI extends JFrame {
                                 isValidUsrName = true;
                                 UsrName = inputUsr.getText();
                                 errorUsrName.setText(" ");
+                                //--------Check it exists in the database or not for the username----------
+                                //***************Connection to the database**************
+                                //Retrieving all the usrName in the database to verify user input username has not been taken yet
                             }
                             //Invalid usrName
                             else
@@ -261,7 +264,7 @@ public class AccountGUI extends JFrame {
                                 inputUsr.setText(null);
                                 errorUsrName.setText("<html><font color='Red'>ERROR!! First three characters in the usrname has to be alphabets!!</font></html>");
                             }
-                            //--------Check it exists in the database or not
+
                         }
                         //Incomplete username----less than 6 characters
                         else

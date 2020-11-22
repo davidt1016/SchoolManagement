@@ -28,7 +28,6 @@ public class StudentInterface extends JFrame {
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
 
-
     //For Attendance Panel
     private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
     private static JButton refreshA;
