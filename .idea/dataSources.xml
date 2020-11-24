@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="Amazon Aurora MySQL - @schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com" uuid="b2735aa3-504b-4473-b029-f4c5d618ddf1">
+      <driver-ref>mysql_aurora</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql:aurora://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306</jdbc-url>
+    </data-source>
+  </component>
+</project>
