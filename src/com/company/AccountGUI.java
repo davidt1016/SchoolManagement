@@ -8,16 +8,24 @@ import java.awt.event.WindowListener;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.sql.*;
+
 
 public class AccountGUI extends JFrame {
+    Connection con;
+    PreparedStatement pst;
+    Statement st;
     //Variables Initialization
     private String FirstName, LastName, UsrName, PassWord, Birthdate; //String variables that store user input
     private String chosenUsrType = " "; //String variables that store user input
+    private int newStudentID;
+    private int newTeacherID;
     //For JComboBox
     private Boolean isValidType = false;
     private String[] UserType = {"----------------","Students", "Teachers"};
     private JComboBox usrT;
     public Boolean isCreateAccount = false;
+
 
     private static Container frame;
     private ImageIcon icon;
@@ -26,7 +34,7 @@ public class AccountGUI extends JFrame {
     //Textfields
     private static JLabel account, instruct, firstName, lastName, usrName, password ,confirmPass, usrType, dateofBirth;
     //For error messages
-    private static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName;
+    private static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName, errorUserExsists;
     //User Inputs
     private static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
     //Password Field
@@ -98,6 +106,9 @@ public class AccountGUI extends JFrame {
         errorMessages = new JLabel(" ");
         errorMessages.setFont(new Font("Default", Font.BOLD, 14));
         errorMessages.setBounds(15, 430, 600, 50);
+        errorUserExsists = new JLabel(" ");
+        errorUserExsists.setFont(new Font("Default", Font.BOLD, 14));
+        errorUserExsists.setBounds(15, 450, 600, 50);
         errorDate = new JLabel(" ");
         errorDate.setFont(new Font("Default", Font.BOLD, 14));
         errorDate.setBounds(15, 450, 600, 50);
@@ -199,6 +210,7 @@ public class AccountGUI extends JFrame {
                         errorUsrName.setText(null);
                         errorUsrType.setText(null);
                         errorPass.setText(null);
+                        errorUserExsists.setText(null);
 
                         //Verifying input can only be string for both first and last name
                         //valid first name
@@ -329,6 +341,7 @@ public class AccountGUI extends JFrame {
                             InputdateofBirth.setText(null);
                             errorDate.setText("<html><font color='Red'>Incompatible Date Format. Please Try Again with yyyy/MM/dd </font></html>");
                         }
+
                     }
                     //Verfying every user input is correct, if so, connect to the database and store data and return to the login screen
                     if( isCreateAccount &&  isValidBdate && isValidPass
@@ -336,12 +349,122 @@ public class AccountGUI extends JFrame {
                     {
                         //-----------Connection with the Database------------
                         //Adding data to the database
-                        //Need to extract number of records for students and teachers to assign userID
+                        try {
+                            //establishing connection with the database server
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            //inserting into the users table (creating an account)
 
-                        Gui GI = new Gui();
-                        //Closing the windows
-                        dispose();
+                            //preparing SQL insertion statement
+                            pst = con.prepareStatement("insert into Users(username, password, usertype)values(?,?,?)");
+                            pst.setString(1, UsrName );
+                            pst.setString(2, PassWord);
+                            pst.setString(3, chosenUsrType);
+                            //Execute the update on the database
+                            pst.executeUpdate();
+                            //catching class not found  error
+                        }catch (ClassNotFoundException classNotFoundException ) {
+                            classNotFoundException.printStackTrace();
+                            //catching insertion of exisiting username error
+                        }catch (SQLIntegrityConstraintViolationException e_SQLIntegrityConstraintViolationException){
+                            //failure to add acount
+                            isCreateAccount = false;
+                            //displaying error
+                            errorUserExsists.setText("<html><font color='Red'>Username Already Exists! Please Try again with a Different Username </font></html>");
+                            //resetting password fields
+                            pass.setText(null);
+                            confirmedPass.setText(null);
+                            //catching other SQL errors
+                        }catch (SQLException other_SQLException){
+                            other_SQLException.printStackTrace();
+                        }
+                        if(isCreateAccount == true){
+                            //preparing insertion into the Students table
 
+                            if (chosenUsrType == "Students"){
+                                //preparing full name string
+                                String fullName = FirstName + " " + LastName;
+                                try {
+                                    st = con.createStatement();
+                                    //fetching the newest student ID added to database
+                                    String querySQL = "SELECT max(Student_ID) as maxStudentID FROM SMSSytem.Student;";
+                                    ResultSet rs = st.executeQuery(querySQL);
+                                    String st_ID = "";
+                                    //Getting data out from the query
+                                    while (rs.next()) {
+                                        st_ID = rs.getString("maxStudentID");
+                                        System.out.print("maxStudentID: " + st_ID);
+                                    }
+                                    //parsing the ID to INT and incrementing it to become the new student ID
+                                    newStudentID = Integer.parseInt(st_ID);
+                                    newStudentID = newStudentID + 1;
+                                    //catching SQL errors
+                                }catch (SQLException other_SQLException) {
+                                    other_SQLException.printStackTrace();
+                                }
+
+                                try{
+                                    //actual insertion into the Students table
+                                    pst = con.prepareStatement("insert into Student(Student_ID, Name, DOB, userName)values(?,?,?,?)");
+                                    String newStudentID_S = Integer.toString(newStudentID);
+                                    pst.setString(1, newStudentID_S);
+                                    pst.setString(2, fullName);
+                                    pst.setString(3, Birthdate);
+                                    pst.setString(4, UsrName);
+                                    //Execute the update on the database
+                                    pst.executeUpdate();
+
+                                }catch (SQLException other_SQLException){
+                                    other_SQLException.printStackTrace();
+                                }
+                            }
+                            //preparing insertion into the Teachers table
+
+                            else if (chosenUsrType == "Teachers"){
+                                //preparing full name string
+                                String fullName = FirstName + " " + LastName;
+                                try {
+                                    st = con.createStatement();
+                                    //fetching the newest Teacher ID added to database
+                                    String querySQL = "SELECT max(Teacher_ID) as maxTeacherID FROM SMSSytem.Teacher;";
+                                    ResultSet rs = st.executeQuery(querySQL);
+                                    String te_ID = "";
+                                    System.out.println("Records in current Database:");
+                                    //Getting data out from the query
+                                    while (rs.next()) {
+                                        te_ID = rs.getString("maxTeacherID");
+                                        System.out.print("maxTeacherID: " + te_ID);
+                                    }
+                                    //parsing the ID to INT and incrementing it to become the new teacher ID
+                                    newTeacherID = Integer.parseInt(te_ID);
+                                    newTeacherID = newTeacherID + 1;
+                                }catch (SQLException other_SQLException) {
+                                    other_SQLException.printStackTrace();
+                                }
+
+                                try{
+                                    //actual insertion into the Teacher table
+                                    pst = con.prepareStatement("insert into Teacher(Teacher_ID, Name, DOB, userName)values(?,?,?,?)");
+                                    String newTeacherID_S = Integer.toString(newTeacherID);
+                                    pst.setString(1, newTeacherID_S);
+                                    pst.setString(2, fullName);
+                                    pst.setString(3, Birthdate);
+                                    pst.setString(4, UsrName);
+                                    //Execute the update on the database
+                                    pst.executeUpdate();
+
+                                }catch (SQLException other_SQLException){
+                                    other_SQLException.printStackTrace();
+                                }
+                            }
+                        }
+
+                        /////////////////////////////////////////////////
+                        if (isCreateAccount == true) {
+                            Gui GI = new Gui();
+                            //Closing the windows
+                            dispose();
+                        }
                     }
                 }
             }
@@ -371,6 +494,7 @@ public class AccountGUI extends JFrame {
         panel.add(errorMessages);
         panel.add(errorUsrName);
         panel.add(errorUsrType);
+        panel.add(errorUserExsists);
         panel.add(cancel);
         panel.add(errorPass);
         panel.add(errorfirstName);
