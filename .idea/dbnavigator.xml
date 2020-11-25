@@ -25,22 +25,26 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="46d07fec-8d16-4394-b233-195a4118fb55">
-        <schema name="SMSSytem" object-types="procedure, index, view, table, constraint, function, column, dataset trigger" />
+        <schema name="SMSSytem" object-types="dataset trigger, constraint, index, column, table, function, procedure, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="46d07fec-8d16-4394-b233-195a4118fb55">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+      <console name="connection" type="STANDARD" schema="SMSSytem" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="46d07fec-8d16-4394-b233-195a4118fb55" object-ref="schemas/SMSSytem/tables/Course" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="46d07fec-8d16-4394-b233-195a4118fb55" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="46d07fec-8d16-4394-b233-195a4118fb55" dataset="SMSSytem.Student" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="46d07fec-8d16-4394-b233-195a4118fb55" dataset="SMSSytem.Course" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="46d07fec-8d16-4394-b233-195a4118fb55" dataset="SMSSytem.Users" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
@@ -81,8 +85,8 @@
           <port value="3306" />
           <database value="SMSSytem" />
           <type value="USER_PASSWORD" />
-          <user value="" />
-          <deprecated-pwd value="" />
+          <user value="admin" />
+          <deprecated-pwd value="cm9vdHVzZXJz" />
         </database>
         <properties>
           <auto-commit value="false" />
