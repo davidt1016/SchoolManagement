@@ -27,14 +27,18 @@ public class StudentInterface extends JFrame {
     private static JButton overallG, refreshG, enrol;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
-
+    private Boolean isSelectedAllGrade = false;
+    private Boolean isSelectedAllAtten = false;
+    private String GrCourse = " ";
     //For Attendance Panel
     private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
     private static JButton refreshA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
+    private String AttCourse = " ";
     //For storing usrname
     private String usrN = " ";
+
     //Setter and getter for userName
     //Setter for UserName
     public void setusrN ( String userName )
@@ -52,11 +56,25 @@ public class StudentInterface extends JFrame {
     StudentInterface(String usrName){
         usrN = usrName;
 
+
+        //-----------------------------Database Connections Required----------------------
+        /*Getting corresponding personal ID, Name, username, Date of Birth and Usertype and
+        add it to Display. Current variable, usrN, is holding the username that is being passed in
+        and it can be used to retrieve in the database. Display the corresponding data to corresponding
+        field as shown from line 91 and onward
+        */
+
+        //--------------Database Connections Required to store Personal information------------------
+
+
+        //According to what courses this specific student (username) has taken, add the course lists to the courseEnrolled
+        //Retreive data (What course this student is taking)
+
         //Connection here with database to display information for Account, Grade, and Attendance
         //For combo box, a list of courses taken by the students
+        //Retrieve a list of courses from Database and do "courseEnrolled.add(courses);"
         courseEnrolled.add("-------------");
         courseEnrolled.add("   SHOW ALL  ");
-
 
         setTitle("Student Interface");
         f = getContentPane();
@@ -78,212 +96,20 @@ public class StudentInterface extends JFrame {
         pa.setBackground(Color.white);
         p.add(pa);
 
-        //For grade panel
-        p_grade.setBounds( 15, 290, 445, 320);
-        p_grade.setBackground(Color.white);
-        p.add(p_grade);
-        p_grade.setLayout(null);
-        //Grade Text
-        grade = new JLabel("<html><u>GRADE</html>");
-        grade.setFont(new Font("Default", Font.BOLD, 16));
-        grade.setBounds(180, 5, 60,30);
-        p_grade.add(grade);
-        //Semester Options for Grade
-        CourseGrade = new JLabel("Select a Course to Display Grade:");
-        CourseGrade.setFont(new Font("Default", Font.PLAIN, 14));
-        CourseGrade.setBounds(10,30, 250, 40);
-        p_grade.add(CourseGrade);
-        //For selecting courses----ComboBox
-        coursesOptions = new JComboBox(courseEnrolled);
-        coursesOptions.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //When the course JCombobox is triggered
-                if ( e.getSource() == coursesOptions )
-                {
-                    //No course has been selected
-                    if (coursesOptions.getSelectedItem() == "-------------")
-                    {
-                        isCourseGradeSelected = false;
-
-                    }
-                    //a course or show all option has been selected
-                    else
-                    {
-                        isCourseGradeSelected = true;
-                    }
-                }
-            }
-        });
-        coursesOptions.setBounds(235, 30, 160, 40);
-        p_grade.add(coursesOptions);
-        //For refresh Button Icon
-        refreshIcon = new ImageIcon(this.getClass().getResource("refresh.png"));
-        Image imRef = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        refreshIcon = new ImageIcon(imRef);
-        //Refresh Button
-        refreshG = new JButton(refreshIcon);
-        //When there is no record
-        emptyRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
-                "click SHOW ALL to display all <br> of the courses you have taken before.<br>" +
-                "If you are not enrol in any course, please click ENROLL button to add course.</html>");
-        emptyRecord.setBounds(60, 65, 300, 190);
-        emptyRecord.setFont(new Font("Default", Font.PLAIN, 14));
-        p_grade.add(emptyRecord);
-
-        //For Enrol button
-        enrol = new JButton("ENROLL");
-        enrol.setBounds(250, 250, 100, 40);
-        enrol.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //If enroll is called, then call another enroll interface
-                if ( e.getSource() == enrol )
-                {
-                    //Display Enrol GUI
-                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN);
-                }
-            }
-        });
-        p_grade.add(enrol);
-
-        //Action Listener when the REFRESH ICON is CLICKED for grade
-        refreshG.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Refresh Button is clicked
-                if ( e.getSource() == refreshG )
-                {
-                    //A course is selected, hide the emptyRecord messages
-                    if ( isCourseGradeSelected )
-                    {
-                        emptyRecord.setText(" ");
-                        overallGPA.setText(" ");
-                    }
-                    //Display all of the courses taken and their grade
-                    else
-                    {
-
-                    }
-                }
-            }
-        });
-        refreshG.setBounds(395, 40, 20, 20);
-        p_grade.add(refreshG);
-        //Overall GPA Display
-        overallGPA = new JLabel(" ");
-        overallGPA.setBounds(10, 70, 240, 30);
-        p_grade.add(overallGPA);
-
-        //For overall GPA button
-        overallG = new JButton("Overall GPA");
-        overallG.setBounds( 70, 250, 100, 40);
-        overallG.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Triggered when overall Grade Button is clicked
-                if (e.getSource() == overallG)
-                {
-                    //Displaying OVerall GPA message
-                    emptyRecord.setText( " ");
-                    overallGPA.setText("Your Cumulative (Overall) GPA is: ");
-                }
-            }
-        });
-        p_grade.add(overallG);
-
-        //For attendance panel
-        p_attend.setBounds( 490, 290, 445, 320);
-        p_attend.setBackground(Color.white);
-        p.add(p_attend);
-        p_attend.setLayout(null);
-        attendanceTitle = new JLabel("<html><u>ATTENDANCE</html>");
-        attendanceTitle.setFont(new Font("Default", Font.BOLD, 16));
-        attendanceTitle.setBounds(160, 5, 120, 30);
-        p_attend.add(attendanceTitle);
-        //Semester Options for Attendance
-        CourseAttendance = new JLabel("Select a Course to Display Attendance:");
-        CourseAttendance.setFont(new Font("Default", Font.PLAIN, 14));
-        CourseAttendance.setBounds(5,30, 270, 40);
-        p_attend.add(CourseAttendance);
-        //For selecting the course for Attendance
-        courseOptionsAttendance = new JComboBox(courseEnrolled);
-        courseOptionsAttendance.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if ( e.getSource() == courseOptionsAttendance )
-                {
-                    //No course has been selected
-                    if (courseOptionsAttendance.getSelectedItem() == "-------------")
-                    {
-                        isCourseAttendanceSelected = false;
-                    }
-                    //a course or show all option has been selected
-                    else
-                    {
-                        isCourseAttendanceSelected = true;
-                    }
-                }
-            }
-        });
-
-        //Empty Attendance Record
-        emptyAttendanceRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
-                "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
-        emptyAttendanceRecord.setBounds(70, 100, 300, 150);
-        emptyAttendanceRecord.setFont(new Font("Default", Font.PLAIN, 14));
-        p_attend.add(emptyAttendanceRecord);
-
-        //Course Selections for Attendance
-        courseOptionsAttendance.setBounds(265, 30, 160, 40);
-        p_attend.add(courseOptionsAttendance);
-        refreshA = new JButton(refreshIcon);
-        refreshA.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Refresh for attendance button is pressed
-                if ( e.getSource()== refreshA)
-                {
-                    //a course has been selected or select ALL has been selected
-                    if(isCourseAttendanceSelected)
-                    {
-                        emptyAttendanceRecord.setText(" ");
-                    }
-                    //None has been selected
-                    else
-                    {
-
-                    }
-                }
-
-            }
-        });
-        refreshA.setBounds( 423, 40, 20, 20);
-        p_attend.add(refreshA);
-
-
-        //Account UI
-        l_image=new JLabel();
-        icon = new ImageIcon(this.getClass().getResource("student.jpg"));
-        Image im = icon.getImage().getScaledInstance(1100,700,Image.SCALE_SMOOTH);
-        icon = new ImageIcon(im);
-        l_image.setIcon(icon);
-        l_image.setBounds(0,0,1100,700);
-        f.add(l_image);
 
         //Create instance of JLabel for input value
         l_atitle=new JLabel("<html><u>Welcome to Student Interface!</html>");
         l_atitle.setFont(new Font("Default", Font.BOLD, 20));
         l_atitle.setBounds(165,4, 350,30);
-        l_id=new JLabel("Personal ID: ");
+        l_id=new JLabel("Personal ID: "); // Change this String to include User Personal ID such as "Personal ID: "+ {personalID retrieved from database}
         l_id.setBounds(50,35, 150,30);
-        l_name=new JLabel("Name: ");
+        l_name=new JLabel("Name: "); // Change this String to include User Name such as "Name : "+ {Name retrieved from database}
         l_name.setBounds(50,75, 150,30);
-        l_username=new JLabel("Username: ");
+        l_username=new JLabel("Username: "); // Change this String to include Username such as "Username: "+ {Username retrieved from database}
         l_username.setBounds(50,115,150,30);
-        l_dob=new JLabel("Date of Birth: ");
+        l_dob=new JLabel("Date of Birth: "); // Change this String to include Date of Birth such as "Date of Birth: "+ {Date of Birth retrieved from database}
         l_dob.setBounds(50,155,150,30);
-        l_usertype=new JLabel("User Type: ");
+        l_usertype=new JLabel("User Type: "); // Change this String to include User Type such as "User Type: "+ {Date of Birth retrieved from database}
         l_usertype.setBounds(50,195,150,30);
         l_newpass = new JLabel("");
         l_newpass.setBounds(350,85,150, 30);
@@ -432,6 +258,257 @@ public class StudentInterface extends JFrame {
                 b_cancel.setVisible(false);
             }
         });
+
+
+        //For grade panel
+        p_grade.setBounds( 15, 290, 445, 320);
+        p_grade.setBackground(Color.white);
+        p.add(p_grade);
+        p_grade.setLayout(null);
+        //Grade Text
+        grade = new JLabel("<html><u>GRADE</html>");
+        grade.setFont(new Font("Default", Font.BOLD, 16));
+        grade.setBounds(180, 5, 60,30);
+        p_grade.add(grade);
+        //Semester Options for Grade
+        CourseGrade = new JLabel("Select a Course to Display Grade:");
+        CourseGrade.setFont(new Font("Default", Font.PLAIN, 14));
+        CourseGrade.setBounds(10,30, 250, 40);
+        p_grade.add(CourseGrade);
+        //For selecting courses----ComboBox
+        coursesOptions = new JComboBox(courseEnrolled);
+        coursesOptions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //When the course JCombobox is triggered
+                if ( e.getSource() == coursesOptions )
+                {
+                    //No course has been selected
+                    if (coursesOptions.getSelectedItem() == "-------------")
+                    {
+                        isCourseGradeSelected = false;
+                    }
+                    //a course or show all options has been selected
+                    else
+                    {
+                        isCourseGradeSelected = true;
+                        //If Show all is selected->Display all grade
+                        if (coursesOptions.getSelectedItem() == "   SHOW ALL  ")
+                        {
+                            isSelectedAllGrade = true;
+                        }
+                        //Show all is not selected
+                        else
+                        {
+                            isSelectedAllGrade = false;
+                            GrCourse = (String) coursesOptions.getSelectedItem();
+                        }
+                    }
+                }
+            }
+        });
+        coursesOptions.setBounds(235, 30, 160, 40);
+        p_grade.add(coursesOptions);
+        //For refresh Button Icon
+        refreshIcon = new ImageIcon(this.getClass().getResource("refresh.png"));
+        Image imRef = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        refreshIcon = new ImageIcon(imRef);
+        //Refresh Button
+        refreshG = new JButton(refreshIcon);
+        //When there is no record
+        emptyRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
+                "click SHOW ALL to display all <br> of the courses you have taken before.<br>" +
+                "If you are not enrol in any course, please click ENROLL button to add course.</html>");
+        emptyRecord.setBounds(60, 65, 300, 190);
+        emptyRecord.setFont(new Font("Default", Font.PLAIN, 14));
+        p_grade.add(emptyRecord);
+
+        //For Enrol button
+        enrol = new JButton("ENROLL");
+        enrol.setBounds(250, 250, 100, 40);
+        enrol.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //If enroll is called, then call another enroll interface
+                if ( e.getSource() == enrol )
+                {
+                    //Display Enrol GUI
+                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN);
+                }
+            }
+        });
+        p_grade.add(enrol);
+
+        //Action Listener when the REFRESH ICON is CLICKED for grade
+        refreshG.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Refresh Button is clicked
+                if ( e.getSource() == refreshG )
+                {
+                    //A course is selected, hide the emptyRecord messages
+                    if ( isCourseGradeSelected )
+                    {
+                        emptyRecord.setText(" ");
+                        overallGPA.setText(" ");
+                        //conditions to check if student choose all or only a specific course has been chosen
+                        if (isSelectedAllGrade)
+                        {
+                            //--------------------Database Connection Needed--------------
+                            //A list of courses that student takes
+                            //Extract all courses that this student take
+
+                        }
+                        else
+                        {
+                            //--------------------Database Connection Needed--------------
+                            //Retrieve Records for a specific course. "GrCourse" variable can retrieve a specific course that
+                            //user has chosen specifically
+                        }
+                    }
+                    //Display error
+                    else
+                    {
+                        emptyRecord.setText("<html>No Records Found. Please select a course to display or " +
+                                "click SHOW ALL to display all <br> of the courses you have taken before.<br> " +
+                               "If you are not enrol in any course, please click ENROLL button to add course.</html>");
+                    }
+                }
+            }
+        });
+        refreshG.setBounds(395, 40, 20, 20);
+        p_grade.add(refreshG);
+        //Overall GPA Display
+        overallGPA = new JLabel(" ");
+        overallGPA.setBounds(10, 70, 240, 30);
+        p_grade.add(overallGPA);
+
+        //For overall GPA button
+        overallG = new JButton("Overall GPA");
+        overallG.setBounds( 70, 250, 100, 40);
+        overallG.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Triggered when overall Grade Button is clicked
+                if (e.getSource() == overallG)
+                {
+                    //Displaying OVerall GPA message
+                    emptyRecord.setText( " ");
+                    //---------------Connection with Database---------------
+                    //Extract Cummulative GPA for this particular student
+                    overallGPA.setText("Your Cumulative (Overall) GPA is: ");
+                }
+            }
+        });
+        p_grade.add(overallG);
+
+        //For attendance panel
+        p_attend.setBounds( 490, 290, 445, 320);
+        p_attend.setBackground(Color.white);
+        p.add(p_attend);
+        p_attend.setLayout(null);
+        attendanceTitle = new JLabel("<html><u>ATTENDANCE</html>");
+        attendanceTitle.setFont(new Font("Default", Font.BOLD, 16));
+        attendanceTitle.setBounds(160, 5, 120, 30);
+        p_attend.add(attendanceTitle);
+        //Semester Options for Attendance
+        CourseAttendance = new JLabel("Select a Course to Display Attendance:");
+        CourseAttendance.setFont(new Font("Default", Font.PLAIN, 14));
+        CourseAttendance.setBounds(5,30, 270, 40);
+        p_attend.add(CourseAttendance);
+        //For selecting the course for Attendance
+        courseOptionsAttendance = new JComboBox(courseEnrolled);
+        courseOptionsAttendance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ( e.getSource() == courseOptionsAttendance )
+                {
+                    //No course has been selected
+                    if (courseOptionsAttendance.getSelectedItem() == "-------------")
+                    {
+                        isCourseAttendanceSelected = false;
+                    }
+                    //a course or show all option has been selected
+                    else
+                    {
+                        isCourseAttendanceSelected = true;
+                        //All courses have been chosen to display attendance
+                        if(courseOptionsAttendance.getSelectedItem() == "   SHOW ALL  ")
+                        {
+                            isSelectedAllAtten = true;
+                        }
+                        //A specific course has been chosen
+                        else
+                        {
+                            isSelectedAllAtten = false;
+                            AttCourse = (String) courseOptionsAttendance.getSelectedItem();
+                        }
+                    }
+                }
+            }
+        });
+
+        //Empty Attendance Record
+        emptyAttendanceRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
+                "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
+        emptyAttendanceRecord.setBounds(70, 100, 300, 150);
+        emptyAttendanceRecord.setFont(new Font("Default", Font.PLAIN, 14));
+        p_attend.add(emptyAttendanceRecord);
+
+        //Course Selections for Attendance
+        courseOptionsAttendance.setBounds(265, 30, 160, 40);
+        p_attend.add(courseOptionsAttendance);
+        refreshA = new JButton(refreshIcon);
+        refreshA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Refresh for attendance button is pressed
+                if ( e.getSource()== refreshA)
+                {
+                    //a course has been selected or select ALL has been selected
+                    if(isCourseAttendanceSelected)
+                    {
+                        emptyAttendanceRecord.setText(" ");
+                        //Users have chosen to display all attendance records for each course(s) that he/she has taken so far
+                        //ALL records
+                        if (isSelectedAllAtten)
+                        {
+                            //--------------------------Database connection Needed----------------------
+                            //Retrieve all attendance records for all of the courses that users have taken so far
+                            //Records of all the courses that this student has taken and all the corresponding attendance record
+                        }
+                        //a specific course is selected and display attendance to that specific course only
+                        else
+                        {
+                            //---------------------Database Connection Needed-------------
+                            //Student has chosen a specific course and that specific option is stored in variable 'AttCourse'
+                            //Retrieve attendance record specific to that course only
+
+                        }
+                    }
+                    //None has been selected
+                    else
+                    {
+                        emptyAttendanceRecord.setText("<html>No Records Found. Please select a course to display or " +
+                             "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
+                    }
+                }
+
+            }
+        });
+        refreshA.setBounds( 423, 40, 20, 20);
+        p_attend.add(refreshA);
+
+
+        //Account UI
+        l_image=new JLabel();
+        icon = new ImageIcon(this.getClass().getResource("student.jpg"));
+        Image im = icon.getImage().getScaledInstance(1100,700,Image.SCALE_SMOOTH);
+        icon = new ImageIcon(im);
+        l_image.setIcon(icon);
+        l_image.setBounds(0,0,1100,700);
+        f.add(l_image);
+
 
         //1100 width and 700 height
         setSize(1100,700);

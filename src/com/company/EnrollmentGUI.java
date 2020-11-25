@@ -49,6 +49,10 @@ public class EnrollmentGUI extends JFrame{
         title.setFont(new Font("Default", Font.BOLD, 16));
         panel.add(title);
 
+        //------------------Data Connection Needed-----------------
+        //List all the courses offered that is stored in the database
+
+
         //Enroll Buttons
         enroll = new JButton("ENROLL");
         enroll.setBounds(150, 400, 300, 40);

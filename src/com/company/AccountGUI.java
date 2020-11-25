@@ -97,7 +97,7 @@ public class AccountGUI extends JFrame {
         confirmedPass = new JPasswordField(50);
         confirmedPass.setBounds(300, 230, 215,30);
 
-        dateofBirth = new JLabel("Enter Your Date of Birth in (YYYY/MM/DD) Format: ");
+        dateofBirth = new JLabel("Enter Your Date of Birth in (YYYY/DD/MM) Format: ");
         dateofBirth.setBounds(15, 280, 340, 20);
         InputdateofBirth = new JTextField(50);
         InputdateofBirth.setBounds(335,275, 180, 30);
@@ -515,7 +515,7 @@ public class AccountGUI extends JFrame {
         setVisible(true);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-//For Showing Messages after the Window has been disposed
+    //For Showing Messages after the Window has been disposed
     class WL implements WindowListener
     {
         @Override
@@ -540,7 +540,7 @@ public class AccountGUI extends JFrame {
         public void windowClosed(WindowEvent e) {
             //Account Creation (create button is pressed) is successful and close the window with success message prompt
             if ( isCreateAccount == true)
-            JOptionPane.showMessageDialog(frame , "User Account Created Successfully!");
+                JOptionPane.showMessageDialog(frame , "User Account Created Successfully!");
         }
         @Override
         public void windowIconified(WindowEvent e) { }

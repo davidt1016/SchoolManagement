@@ -5,9 +5,9 @@ public class Main {
     public static void main(String[] args) {
         //AccountGUI AGui = new AccountGUI();
          //AGui.Display();
-        TeacherGUI TGui = new TeacherGUI("AHAHAH");
+        //TeacherGUI TGui = new TeacherGUI("AHAHAH");
         //AdminGUI AdGui = new AdminGUI();
-        StudentInterface SI= new StudentInterface("Test");
-        AdminGUI aGUI = new AdminGUI("ADDD");
+       StudentInterface SI= new StudentInterface("Test"); //Pass in username in this parameter to test
+        //AdminGUI aGUI = new AdminGUI("ADDD");
     }
 }

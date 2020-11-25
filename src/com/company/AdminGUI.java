@@ -28,6 +28,9 @@ public class AdminGUI extends JFrame {
     //For displaying GUI
     AdminGUI(String usersName)
     {
+        // We need search bad First name, username to display the records correspondingly
+        //Modify anything but Personal ID and username
+        //Just one panel to display one thing
         userN = usersName;
 
         setTitle("Administrator Interface");
