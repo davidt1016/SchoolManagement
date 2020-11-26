@@ -2,6 +2,9 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +26,15 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String PassWord;
-
+    //Test Table
+    private String [] columnGrade = {"Course ID", "Course Name", "Grade"};
+    private Object [][] dataGrade =
+            { {"0001", "ENSC 351", "90%"},
+                    {"0002", "ENSC 275", "88%"}  ,
+                    {"0003", "CMPT 225", "80%"},
+                    {"0004", "ENSC 110", "78%"},
+                    {"0005", "ENSC 450", "99%"}
+            };
     //For Grade interface
     private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, overallGPA, refreshGrade;
     private static JButton overallG, refreshG, enrol;
@@ -32,6 +43,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private Boolean isSelectedAllGrade = false;
     private Boolean isSelectedAllAtten = false;
     private String GrCourse = " ";
+
     //For Attendance Panel
     private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
     private static JButton refreshA;
@@ -359,6 +371,24 @@ public class Student extends JFrame implements UserInterfaceGUI {
                             //A list of courses that student takes
                             //Extract all courses that this student take
 
+                            /*Testing-show data properly
+                            //Reference link for dynamic data insertion:
+                            http://www.java2s.com/Tutorial/Java/0240__Swing/publicJTableVectorrowDataVectorcolumnNames.htm
+                            JTable gradeT = new JTable(dataGrade, columnGrade );
+                            gradeT.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                                @Override
+                                //Printing out the selected row that users have chosen
+                                public void valueChanged(ListSelectionEvent e) {
+                                    String Table_click = (gradeT.getModel().getValueAt(gradeT.getSelectedRow(), 1).toString());
+                                    //System.out.println(gradeT.getValueAt(gradeT.getSelectedRow(), 1).toString());
+                                    System.out.println(Table_click);
+                                }
+                            });
+                            gradeT.setFillsViewportHeight(true);
+                            JScrollPane scrollPane = new JScrollPane(gradeT);
+                            scrollPane.setBounds( 25, 100, 400, 100);
+                            p_grade.add(scrollPane);
+                            */
                         }
                         else
                         {
