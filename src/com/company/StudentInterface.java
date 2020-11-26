@@ -43,6 +43,8 @@ public class StudentInterface extends JFrame {
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
     private String AttCourse = " ";
+    private String[] AttCourseParts;
+    private String[] GrCourseParts;
     //For storing usrname
     private String usrN = " ";
 
@@ -64,10 +66,12 @@ public class StudentInterface extends JFrame {
     private String DOB;
 
     private String Courses;
+    private String CoursesID;
     private String Grades;
     private String Attendances;
 
     private String Course;
+    private String CourseID;
     private String Grade;
     String cGPA_s = "";
     //**************Later need to put username and password in parameter in constructor to extract data***************
@@ -119,17 +123,18 @@ public class StudentInterface extends JFrame {
             //con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
             //st = con.createStatement();
             //fetching username
-            PreparedStatement statement = con.prepareStatement("SELECT C.Course_Name, C.Teacher_ID, T.Grade, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+            PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, C.Teacher_ID, T.Grade, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
             statement.setString(1, SID);
             ResultSet rs = statement.executeQuery();
             //Getting data out from the query
             while (rs.next()) {
                 Courses = rs.getString("Course_Name");
+                CoursesID = rs.getString("Course_ID");
                 Grades = rs.getString("Grade");
                 Attendances = rs.getString("Attendance");
 
                 System.out.print(Courses + " ");
-                courseEnrolled.add(Courses);
+                courseEnrolled.add(CoursesID + ": " + Courses);
             }
         }catch (SQLException other_SQLException) {
             other_SQLException.printStackTrace();
@@ -372,6 +377,9 @@ public class StudentInterface extends JFrame {
                         {
                             isSelectedAllGrade = false;
                             GrCourse = (String) coursesOptions.getSelectedItem();
+                            GrCourseParts = GrCourse.split("\\:");
+                            GrCourse = GrCourseParts[0];
+                            System.out.print(GrCourse);
                         }
                     }
                 }
@@ -429,7 +437,7 @@ public class StudentInterface extends JFrame {
                             //Extract all courses that this student take
                             emptyRecord.setText("");
                             try{
-                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
                                 statement.setString(1, SID);
                                 ResultSet rs = statement.executeQuery();
                                 //Getting data out from the query
@@ -437,11 +445,12 @@ public class StudentInterface extends JFrame {
                                 String GradeList = "";
                                 while (rs.next()) {
                                     Course = rs.getString("Course_Name");
+                                    CoursesID = rs.getString("Course_ID");
                                     Grade = rs.getString("Grade");
                                     //Attendances = rs.getString("Attendance");
 
                                     System.out.print("ALL " + Courses + " ");
-                                    GradeList = GradeList + Course + ": " + Grade + "%" + "<br/>";
+                                    GradeList = GradeList +CoursesID + ": " + Course + ": " + Grade + "%" + "<br/>";
                                 }
                                 emptyRecord.setText("<html>" + GradeList + "</html>");
                             }catch (SQLException other_SQLException) {
@@ -454,18 +463,19 @@ public class StudentInterface extends JFrame {
                             //Retrieve Records for a specific course. "GrCourse" variable can retrieve a specific course that
                             //user has chosen specifically
                             try{
-                            PreparedStatement statement = con.prepareStatement("SELECT C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_Name = ?");
+                            PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_ID = ?");
                             statement.setString(1, SID);
                             statement.setString(2, GrCourse);
                             ResultSet rs = statement.executeQuery();
                             //Getting data out from the query
                             while (rs.next()) {
                                 Course = rs.getString("Course_Name");
+                                CourseID = rs.getString("Course_ID");
                                 Grade = rs.getString("Grade");
 
                                 System.out.print(Courses + " ");
                                 emptyRecord.setText("");
-                                emptyRecord.setText(emptyRecord.getText() + Course + ": " + Grade + "%");
+                                emptyRecord.setText(emptyRecord.getText() + CourseID + ": " + Course + ": " + Grade + "%");
                             }
                         }catch (SQLException other_SQLException) {
                         other_SQLException.printStackTrace();
@@ -570,6 +580,9 @@ public class StudentInterface extends JFrame {
                         {
                             isSelectedAllAtten = false;
                             AttCourse = (String) courseOptionsAttendance.getSelectedItem();
+                            AttCourseParts = AttCourse.split("\\:");
+                            AttCourse = AttCourseParts[0];
+                            System.out.print(AttCourse);
                         }
                     }
                 }
@@ -602,7 +615,7 @@ public class StudentInterface extends JFrame {
                         if (isSelectedAllAtten)
                         {
                             try{
-                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
                                 statement.setString(1, SID);
                                 ResultSet rs = statement.executeQuery();
                                 //Getting data out from the query
@@ -610,10 +623,11 @@ public class StudentInterface extends JFrame {
                                 String AttendanceList = "";
                                 while (rs.next()) {
                                     Course = rs.getString("Course_Name");
+                                    CoursesID = rs.getString("Course_ID");
                                     Attendances = rs.getString("Attendance");
 
                                     System.out.print("ALL " + Courses + " ");
-                                    AttendanceList = AttendanceList + Course + ": " + Attendances + "<br/>";
+                                    AttendanceList = AttendanceList + CoursesID + ": " + Course + ": " + Attendances + "<br/>";
                                 }
                                 emptyAttendanceRecord.setText("<html>" + AttendanceList + "</html>");
                             }catch (SQLException other_SQLException) {
@@ -626,18 +640,19 @@ public class StudentInterface extends JFrame {
                             //Student has chosen a specific course and that specific option is stored in variable 'AttCourse'
                             //Retrieve attendance record specific to that course only
                             try{
-                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_Name = ?");
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_ID = ?");
                                 statement.setString(1, SID);
                                 statement.setString(2, AttCourse);
                                 ResultSet rs = statement.executeQuery();
                                 //Getting data out from the query
                                 while (rs.next()) {
                                     Course = rs.getString("Course_Name");
+                                    CourseID = rs.getString("Course_ID");
                                     Attendances = rs.getString("Attendance");
 
                                     System.out.print(Courses + " ");
                                     emptyAttendanceRecord.setText("");
-                                    emptyAttendanceRecord.setText(emptyAttendanceRecord.getText() + Course + ": " + Attendances);
+                                    emptyAttendanceRecord.setText(emptyAttendanceRecord.getText() + CourseID + ": " + Course + ": " + Attendances);
                                 }
                             }catch (SQLException other_SQLException) {
                                 other_SQLException.printStackTrace();
