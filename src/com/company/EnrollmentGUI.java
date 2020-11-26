@@ -71,7 +71,8 @@ public class EnrollmentGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if ( e.getSource() == cancel )
                 {
-                    StudentInterface sGUI = new StudentInterface(userN);
+                    Student s = new Student();
+                    s.DisplayUserGUI(userN);
                     dispose();
                 }
 

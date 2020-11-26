@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class TeacherGUI extends JFrame{
+public class Teacher extends JFrame implements UserInterfaceGUI {
 
     //Variable Initializations
     private static Container frame;
@@ -21,22 +21,19 @@ public class TeacherGUI extends JFrame{
     private static JButton nextA, backA;
 
     private String userN = " ";
-
-    //Setter and getter for userName
-    //Setter for UserName
-    public void setusrN ( String userName )
-    {
+    @Override
+    public void setusrN(String userName) {
         this.userN = userName;
     }
-    //Getter for username
-    public String getusrN()
-    {
+
+    @Override
+    public String getusrN() {
         return userN;
     }
-    //For displaying GUI
-    TeacherGUI(String userName)
-    {
-        userN = userName;
+
+    @Override
+    public void DisplayUserGUI(String usersName) {
+        userN = usersName;
         //Create instance of JPanel
         JPanel p=new JPanel();
         //For Grade Panel
@@ -54,8 +51,7 @@ public class TeacherGUI extends JFrame{
         panel.setLayout(null);
         panel.setBounds(70,10,950,640);
 
-
-
+        add(panel);
 
         //For grade panel
         p_grade.setBounds( 30, 290, 420, 320);
@@ -120,7 +116,8 @@ public class TeacherGUI extends JFrame{
             }
             //No option: remain in the same interface with everything cleared out!!!
             else{
-                TeacherGUI tGUI = new TeacherGUI(userN);
+                Teacher tGui = new Teacher();
+                tGui.DisplayUserGUI(userN);
             }
         }
         @Override
@@ -135,6 +132,6 @@ public class TeacherGUI extends JFrame{
         public void windowActivated(WindowEvent e) { }
         @Override
         public void windowDeactivated(WindowEvent e) { }
+
     }
 }
-

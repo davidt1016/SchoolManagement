@@ -9,7 +9,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Arrays;
 
-public class AdminGUI extends JFrame {
+public class Admin extends JFrame implements UserInterfaceGUI {
+
     //Variable Initializations
     private static Container frame;
     private ImageIcon icon;
@@ -23,20 +24,18 @@ public class AdminGUI extends JFrame {
     private String PassW = " ";
     private String userN = " ";
 
-    //Setter and getter for userName
-    //Setter for UserName
-    public void setusrN ( String userName )
-    {
+    @Override
+    public void setusrN(String userName) {
         this.userN = userName;
     }
-    //Getter for username
-    public String getusrN()
-    {
+
+    @Override
+    public String getusrN() {
         return userN;
     }
-    //For displaying GUI
-    AdminGUI(String usersName)
-    {
+
+    @Override
+    public void DisplayUserGUI(String usersName) {
         // We need search bad First name, username to display the records correspondingly
         //Modify anything but Personal ID and username
         //Just one panel to display one thing
@@ -168,7 +167,8 @@ public class AdminGUI extends JFrame {
                         //------------------------Data connection needed for updating admin password----------
                         JOptionPane.showMessageDialog(frame, "Update Password Successfully!");
                         //return back to original display
-                        AdminGUI aGUI = new AdminGUI(userN);
+                        Admin administrator = new Admin();
+                        administrator.DisplayUserGUI(userN);
                     }
                 }
                 else
@@ -236,8 +236,6 @@ public class AdminGUI extends JFrame {
 
 
 
-
-
         add(panel);
 
         //Image handling/Resizing
@@ -270,7 +268,10 @@ public class AdminGUI extends JFrame {
             }
             //"No" option: remain in the same interface.
             else{
-                AdminGUI AdGUI = new AdminGUI(userN);
+                Admin administrator = new Admin();
+                administrator.DisplayUserGUI(userN);
+                //AdminGUI AdGUI = new AdminGUI(userN);
+
             }
         }
         @Override
@@ -286,4 +287,6 @@ public class AdminGUI extends JFrame {
         @Override
         public void windowDeactivated(WindowEvent e) { }
     }
+
+
 }

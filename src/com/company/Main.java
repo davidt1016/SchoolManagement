@@ -7,7 +7,15 @@ public class Main {
          //AGui.Display();
         //TeacherGUI TGui = new TeacherGUI("AHAHAH");
         //AdminGUI AdGui = new AdminGUI();
-       StudentInterface SI= new StudentInterface("Test"); //Pass in username in this parameter to test
-        //AdminGUI aGUI = new AdminGUI("ADDD");
+       //StudentInterface SI= new StudentInterface("Test"); //Pass in username in this parameter to test
+
+        //For new interface implementation methods
+        Teacher t = new Teacher();
+        t.DisplayUserGUI("teacher");
+       //Student s = new Student();
+        //s.DisplayUserGUI("Student");
+        //Admin ad = new Admin();
+        //ad.DisplayUserGUI("Admin");
+
     }
 }
