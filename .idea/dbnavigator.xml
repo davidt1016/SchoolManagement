@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="46d07fec-8d16-4394-b233-195a4118fb55">
-        <schema name="SMSSytem" object-types="dataset trigger, constraint, index, column, table, function, procedure, view" />
+        <schema name="SMSSytem" object-types="table, function, procedure, view" />
       </connection>
     </loaded-nodes>
   </component>
@@ -35,9 +35,7 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="46d07fec-8d16-4394-b233-195a4118fb55" object-ref="schemas/SMSSytem/tables/Course" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="46d07fec-8d16-4394-b233-195a4118fb55" />
