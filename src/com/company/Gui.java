@@ -4,8 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.*;
 
 public class Gui extends JFrame{
+    Connection con;
+    PreparedStatement pst;
+    Statement st;
     private static JLabel l_title,l_user,l_pass,l_image;
     private static JTextField tf_user;
     private static JButton b_login,b_register;
@@ -13,7 +18,7 @@ public class Gui extends JFrame{
     private static JPasswordField pass;
     private static JLabel err_user,err_pass;
     Container f;
-    private String username,password;
+    private String usernameS ,password;
 
     Gui(){
         //Use Java Swing to create an input GUI
@@ -58,12 +63,14 @@ public class Gui extends JFrame{
         p.add(pass);
 
         //Create instance of JLabel for error message
-        err_user = new JLabel("User log in error!");
+        err_user = new JLabel("Username Does Not Exist!");
         err_user.setBounds(100,170,150,30);
         err_user.setForeground(Color.RED);
-        err_pass=new JLabel("Password log in error!");
+        err_user.setVisible(false);
+        err_pass=new JLabel("Password Doesn't match given Username!");
         err_pass.setBounds(100,190,150,30);
         err_pass.setForeground(Color.RED);
+        err_pass.setVisible(false);
         p.add(err_user);
         p.add(err_pass);
 
@@ -84,14 +91,72 @@ public class Gui extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 //********* Login Credential Here **************//
-                username = tf_user.getText();
+                usernameS = tf_user.getText();
                 password = pass.getText();
 
                 //Connection to Database Here
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                    st = con.createStatement();
+                    //fetching username
+                    PreparedStatement statement = con.prepareStatement("SELECT password, userType FROM SMSSytem.Users where username = ?;");
+                    statement.setString(1, usernameS);
+                    ResultSet rs = statement.executeQuery();
+                    String pass = "";
+                    String userTypeS = "";
+                    //Getting data out from the query
+                    while (rs.next()) {
+                        pass = rs.getString("password");
+                        userTypeS = rs.getString("userType");
+                        System.out.print("usrName: " + usernameS);
+                        System.out.println(", password: " + pass);
+                        System.out.println(", entered password: " + password);
+                    }
+                    if (pass.isEmpty()){
+                        err_user.setVisible(true);
+                        System.out.print("null: "+ usernameS);
+                    }
+
+                    else if(!(pass.equals(password))){
+                        err_pass.setVisible(true);
+                        System.out.print("WP: "+ usernameS);
+                    }
+
+                    else{
+                        System.out.print("IN: "+ usernameS);
+                        if(userTypeS.equals("Students")){
+                            Student s = new Student();
+                            s.DisplayUserGUI(usernameS);
+                            dispose();
+                        }
+                        else if (userTypeS.equals("Teachers")){
+                            Teacher t = new Teacher();
+                            t.DisplayUserGUI(usernameS);
+                            dispose();
+                        }
+                        else if (userTypeS.equals("Admin")){
+                            Admin ad = new Admin();
+                            ad.DisplayUserGUI(usernameS);
+                            dispose();
+                        }
+
+                    }
 
 
-                StudentInterface SI = new StudentInterface(username);
-                dispose();
+                }catch (ClassNotFoundException classNotFoundException ) {
+                    classNotFoundException.printStackTrace();
+                }catch (SQLException other_SQLException) {
+                    other_SQLException.printStackTrace();
+                }
+
+
+
+                //////////////////////////////
+
+
+
+
             }
         });
 
@@ -125,5 +190,4 @@ public class Gui extends JFrame{
         setVisible(true);
     }
 }
-
 

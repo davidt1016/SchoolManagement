@@ -10,12 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class Student extends JFrame implements UserInterfaceGUI {
+    Connection con;
+    PreparedStatement pst;
+    Statement st;
     //Dynamic Array for Storing All the Possible Courses for each Student
-    private Vector<String> courseEnrolled = new Vector<String>();
+    private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
     private static JComboBox coursesOptions;
     private static JComboBox courseOptionsAttendance;
@@ -26,15 +30,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String PassWord;
-    //Test Table
-    private String [] columnGrade = {"Course ID", "Course Name", "Grade"};
-    private Object [][] dataGrade =
-            { {"0001", "ENSC 351", "90%"},
-                    {"0002", "ENSC 275", "88%"}  ,
-                    {"0003", "CMPT 225", "80%"},
-                    {"0004", "ENSC 110", "78%"},
-                    {"0005", "ENSC 450", "99%"}
-            };
+
     //For Grade interface
     private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, overallGPA, refreshGrade;
     private static JButton overallG, refreshG, enrol;
@@ -43,16 +39,32 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private Boolean isSelectedAllGrade = false;
     private Boolean isSelectedAllAtten = false;
     private String GrCourse = " ";
-
     //For Attendance Panel
     private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
     private static JButton refreshA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
     private String AttCourse = " ";
+    private String[] AttCourseParts;
+    private String[] GrCourseParts;
     //For storing usrname
     private String usrN = " ";
     Container f;
+    private String PID;
+    private String SID;
+    private String Name;
+    private String DOB;
+
+    private String Courses;
+    private String CoursesID;
+    private String Grades;
+    private String Attendances;
+
+    private String Course;
+    private String CourseID;
+    private String Grade;
+    String cGPA_s = "";
+
     //Setter and getter for userName
     //Setter for UserName
     @Override
@@ -68,7 +80,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     @Override
     public void DisplayUserGUI(String usersName) {
         usrN = usersName;
-
+        courseEnrolled.add("-------------");
 
         //-----------------------------Database Connections Required----------------------
         /*Getting corresponding personal ID, Name, username, Date of Birth and Usertype and
@@ -86,6 +98,52 @@ public class Student extends JFrame implements UserInterfaceGUI {
         //Connection here with database to display information for Account, Grade, and Attendance
         //For combo box, a list of courses taken by the students
         //Retrieve a list of courses from Database and do "courseEnrolled.add(courses);"
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+            st = con.createStatement();
+            //fetching username
+            PreparedStatement statement = con.prepareStatement("SELECT Student_ID, Name, DOB FROM SMSSytem.Student where username = ?;");
+            statement.setString(1, usrN);
+            ResultSet rs = statement.executeQuery();
+            //Getting data out from the query
+            while (rs.next()) {
+                SID = rs.getString("Student_ID");
+                PID = usrN + SID;
+                Name = rs.getString("Name");
+                DOB = rs.getString("DOB");
+                System.out.print("usrName: " + usrN);
+            }
+        }catch (ClassNotFoundException classNotFoundException ) {
+            classNotFoundException.printStackTrace();
+        }catch (SQLException other_SQLException) {
+            other_SQLException.printStackTrace();
+        }
+
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            //con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+            //st = con.createStatement();
+            //fetching username
+            PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, C.Teacher_ID, T.Grade, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+            statement.setString(1, SID);
+            ResultSet rs = statement.executeQuery();
+            //Getting data out from the query
+            while (rs.next()) {
+                Courses = rs.getString("Course_Name");
+                CoursesID = rs.getString("Course_ID");
+                Grades = rs.getString("Grade");
+                Attendances = rs.getString("Attendance");
+
+                System.out.print(Courses + " ");
+                courseEnrolled.add(CoursesID + ": " + Courses);
+            }
+        }catch (SQLException other_SQLException) {
+            other_SQLException.printStackTrace();
+        }
+
+
+
         courseEnrolled.add("-------------");
         courseEnrolled.add("   SHOW ALL  ");
 
@@ -114,15 +172,15 @@ public class Student extends JFrame implements UserInterfaceGUI {
         l_atitle=new JLabel("<html><u>Welcome to Student Interface!</html>");
         l_atitle.setFont(new Font("Default", Font.BOLD, 20));
         l_atitle.setBounds(165,4, 350,30);
-        l_id=new JLabel("Personal ID: "); // Change this String to include User Personal ID such as "Personal ID: "+ {personalID retrieved from database}
+        l_id=new JLabel("Personal ID: "); //{personalID
         l_id.setBounds(50,35, 150,30);
-        l_name=new JLabel("Name: "); // Change this String to include User Name such as "Name : "+ {Name retrieved from database}
+        l_name=new JLabel("Name: "); //  "Name :
         l_name.setBounds(50,75, 150,30);
-        l_username=new JLabel("Username: "); // Change this String to include Username such as "Username: "+ {Username retrieved from database}
+        l_username=new JLabel("Username: "); //  "Username:
         l_username.setBounds(50,115,150,30);
-        l_dob=new JLabel("Date of Birth: "); // Change this String to include Date of Birth such as "Date of Birth: "+ {Date of Birth retrieved from database}
+        l_dob=new JLabel("Date of Birth: "); // {Date of Birth retrieved from database}
         l_dob.setBounds(50,155,150,30);
-        l_usertype=new JLabel("User Type: "); // Change this String to include User Type such as "User Type: "+ {Date of Birth retrieved from database}
+        l_usertype=new JLabel("User Type: "); // "User Type:
         l_usertype.setBounds(50,195,150,30);
         l_newpass = new JLabel("");
         l_newpass.setBounds(350,85,150, 30);
@@ -140,6 +198,12 @@ public class Student extends JFrame implements UserInterfaceGUI {
         pa.add(l_newpass);
         pa.add(l_confirmpass);
         pa.add(errorPass);
+
+        l_name.setText(l_name.getText()+" "+Name);
+        l_username.setText(l_username.getText()+" "+usrN);
+        l_dob.setText(l_dob.getText()+" "+DOB);
+        l_id.setText(l_id.getText()+" "+PID);
+        l_usertype.setText(l_usertype.getText()+" Student");
 
         newpass = new JPasswordField();
         newpass.setBounds(460,90,150, 30);
@@ -315,6 +379,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
                         {
                             isSelectedAllGrade = false;
                             GrCourse = (String) coursesOptions.getSelectedItem();
+                            GrCourseParts = GrCourse.split("\\:");
+                            GrCourse = GrCourseParts[0];
+                            System.out.print(GrCourse);
                         }
                     }
                 }
@@ -346,7 +413,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 if ( e.getSource() == enrol )
                 {
                     //Display Enrol GUI
-                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN);
+                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN, Integer.parseInt(SID));
                 }
             }
         });
@@ -370,31 +437,67 @@ public class Student extends JFrame implements UserInterfaceGUI {
                             //--------------------Database Connection Needed--------------
                             //A list of courses that student takes
                             //Extract all courses that this student take
+                            emptyRecord.setText("");
+                            try{
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+                                statement.setString(1, SID);
+                                ResultSet rs = statement.executeQuery();
+                                //Getting data out from the query
+                                emptyRecord.setText("");
+                                String GradeList = "";
+                                while (rs.next()) {
+                                    Course = rs.getString("Course_Name");
+                                    CoursesID = rs.getString("Course_ID");
+                                    Grade = rs.getString("Grade");
+                                    //latestfix2611 checking null value
+                                    if (Grade == null){
+                                        Grade = "N/A";
+                                    }
+                                    else{
+                                        Grade = Grade + "%";
+                                    }
 
-                            /*Testing-show data properly
-                            //Reference link for dynamic data insertion:
-                            http://www.java2s.com/Tutorial/Java/0240__Swing/publicJTableVectorrowDataVectorcolumnNames.htm
-                            JTable gradeT = new JTable(dataGrade, columnGrade );
-                            gradeT.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                                @Override
-                                //Printing out the selected row that users have chosen
-                                public void valueChanged(ListSelectionEvent e) {
-                                    String Table_click = (gradeT.getModel().getValueAt(gradeT.getSelectedRow(), 1).toString());
-                                    //System.out.println(gradeT.getValueAt(gradeT.getSelectedRow(), 1).toString());
-                                    System.out.println(Table_click);
+
+                                    System.out.print("ALL " + Courses + " ");
+                                    GradeList = GradeList +CoursesID + ": " + Course + ": " + Grade + "<br/>";
+                                    //latestfix2611END
                                 }
-                            });
-                            gradeT.setFillsViewportHeight(true);
-                            JScrollPane scrollPane = new JScrollPane(gradeT);
-                            scrollPane.setBounds( 25, 100, 400, 100);
-                            p_grade.add(scrollPane);
-                            */
+                                emptyRecord.setText("<html>" + GradeList + "</html>");
+                            }catch (SQLException other_SQLException) {
+                                other_SQLException.printStackTrace();
+                            }
+
                         }
                         else
                         {
-                            //--------------------Database Connection Needed--------------
                             //Retrieve Records for a specific course. "GrCourse" variable can retrieve a specific course that
                             //user has chosen specifically
+                            try{
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Grade FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_ID = ?");
+                                statement.setString(1, SID);
+                                statement.setString(2, GrCourse);
+                                ResultSet rs = statement.executeQuery();
+                                //Getting data out from the query
+                                while (rs.next()) {
+                                    Course = rs.getString("Course_Name");
+                                    CourseID = rs.getString("Course_ID");
+                                    Grade = rs.getString("Grade");
+                                    //latestfix2611 checking null value
+                                    if (Grade == null){
+                                        Grade = "N/A";
+                                    }
+                                    else{
+                                        Grade = Grade + "%";
+                                    }
+
+                                    System.out.print(Courses + " ");
+                                    emptyRecord.setText("");
+                                    emptyRecord.setText(emptyRecord.getText() + CourseID + ": " + Course + ": " + Grade);
+                                    //latestfix2611END
+                                }
+                            }catch (SQLException other_SQLException) {
+                                other_SQLException.printStackTrace();
+                            }
                         }
                     }
                     //Display error
@@ -411,7 +514,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
         p_grade.add(refreshG);
         //Overall GPA Display
         overallGPA = new JLabel(" ");
-        overallGPA.setBounds(10, 70, 240, 30);
+        overallGPA.setBounds(10, 70, 280, 30);
         p_grade.add(overallGPA);
 
         //For overall GPA button
@@ -426,8 +529,33 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     //Displaying OVerall GPA message
                     emptyRecord.setText( " ");
                     //---------------Connection with Database---------------
-                    //Extract Cummulative GPA for this particular student
-                    overallGPA.setText("Your Cumulative (Overall) GPA is: ");
+                    //Extracting Cummulative GPA for this particular student
+
+                    try{
+                        //latestfix2611 changed the query
+                        PreparedStatement statement = con.prepareStatement("SELECT count(T.Course_ID) as numCourses, sum(T.Grade) as gradeSum FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.T.Grade is not Null");
+                        //latestfix2611END
+                        statement.setString(1, SID);
+                        ResultSet rs = statement.executeQuery();
+                        //Getting data out from the query
+                        overallGPA.setText("");
+                        Float cGPA_f;
+                        Float numCourses;
+                        Float gradeSum;
+                        while (rs.next()) {
+                            numCourses = Float.parseFloat(rs.getString("numCourses"));
+                            gradeSum = Float.parseFloat(rs.getString("gradeSum"));
+                            cGPA_f = 4.33f * (gradeSum/numCourses)/100;
+                            cGPA_s = String.format("%.2f", cGPA_f);
+
+
+                        }
+                    }catch (SQLException other_SQLException) {
+                        other_SQLException.printStackTrace();
+                    }
+
+
+                    overallGPA.setText("Your Cumulative (Overall) GPA is: " + cGPA_s + "/4.33");
                 }
             }
         });
@@ -473,6 +601,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
                         {
                             isSelectedAllAtten = false;
                             AttCourse = (String) courseOptionsAttendance.getSelectedItem();
+                            AttCourseParts = AttCourse.split("\\:");
+                            AttCourse = AttCourseParts[0];
+                            System.out.print(AttCourse);
                         }
                     }
                 }
@@ -504,16 +635,59 @@ public class Student extends JFrame implements UserInterfaceGUI {
                         //ALL records
                         if (isSelectedAllAtten)
                         {
-                            //--------------------------Database connection Needed----------------------
-                            //Retrieve all attendance records for all of the courses that users have taken so far
-                            //Records of all the courses that this student has taken and all the corresponding attendance record
+                            try{
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+                                statement.setString(1, SID);
+                                ResultSet rs = statement.executeQuery();
+                                //Getting data out from the query
+                                emptyAttendanceRecord.setText("");
+                                String AttendanceList = "";
+                                while (rs.next()) {
+                                    Course = rs.getString("Course_Name");
+                                    CoursesID = rs.getString("Course_ID");
+                                    Attendances = rs.getString("Attendance");
+                                    //latestfix2611 checking null value
+                                    if (Attendances == null){
+                                        Attendances = "N/A";
+                                    }
+
+                                    System.out.print("ALL " + Courses + " ");
+                                    AttendanceList = AttendanceList + CoursesID + ": " + Course + ": " + Attendances + "<br/>";
+                                    //latestfix2611END
+                                }
+                                emptyAttendanceRecord.setText("<html>" + AttendanceList + "</html>");
+                            }catch (SQLException other_SQLException) {
+                                other_SQLException.printStackTrace();
+                            }
                         }
                         //a specific course is selected and display attendance to that specific course only
                         else
                         {
-                            //---------------------Database Connection Needed-------------
                             //Student has chosen a specific course and that specific option is stored in variable 'AttCourse'
                             //Retrieve attendance record specific to that course only
+                            try{
+                                PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.C.Course_ID = ?");
+                                statement.setString(1, SID);
+                                statement.setString(2, AttCourse);
+                                ResultSet rs = statement.executeQuery();
+                                //Getting data out from the query
+                                while (rs.next()) {
+                                    Course = rs.getString("Course_Name");
+                                    CourseID = rs.getString("Course_ID");
+                                    Attendances = rs.getString("Attendance");
+                                    //latestfix2611  checking null value
+                                    if (Attendances == null){
+                                        Attendances = "N/A";
+                                    }
+
+                                    System.out.print(Courses + " ");
+                                    emptyAttendanceRecord.setText("");
+                                    emptyAttendanceRecord.setText(emptyAttendanceRecord.getText() + CourseID + ": " + Course + ": " + Attendances);
+                                    //latestfix2611END
+                                }
+                            }catch (SQLException other_SQLException) {
+                                other_SQLException.printStackTrace();
+                            }
 
                         }
                     }
@@ -571,8 +745,8 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 System.exit(1);
             }
             else{
-                Student s = new Student();
-                s.DisplayUserGUI(usrN);
+                Student SI = new Student();
+                SI.DisplayUserGUI(usrN);
             }
         }
         @Override
@@ -583,8 +757,8 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 JOptionPane.showMessageDialog(null , "Return to Login Screen!");
             }
             else{
-                Student s = new Student();
-                s.DisplayUserGUI(usrN);
+                Student SI = new Student();
+                SI.DisplayUserGUI(usrN);
             }
         }
         @Override
@@ -596,6 +770,4 @@ public class Student extends JFrame implements UserInterfaceGUI {
         @Override
         public void windowDeactivated(WindowEvent e) { }
     }
-
-
 }

@@ -142,7 +142,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             public void actionPerformed(ActionEvent e) {
                 if ( e.getSource()== cancelPass)
                 {
-                    AdminGUI aGUI = new AdminGUI(userN);
+                    Admin ad = new Admin();
+                    ad.DisplayUserGUI(userN);
+
                 }
             }
         });
@@ -270,7 +272,6 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             else{
                 Admin administrator = new Admin();
                 administrator.DisplayUserGUI(userN);
-                //AdminGUI AdGUI = new AdminGUI(userN);
 
             }
         }
