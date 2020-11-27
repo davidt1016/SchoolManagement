@@ -411,7 +411,7 @@ public class StudentInterface extends JFrame {
                 if ( e.getSource() == enrol )
                 {
                     //Display Enrol GUI
-                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN);
+                    EnrollmentGUI eGUI = new  EnrollmentGUI(usrN, Integer.parseInt(SID));
                 }
             }
         });
@@ -447,10 +447,18 @@ public class StudentInterface extends JFrame {
                                     Course = rs.getString("Course_Name");
                                     CoursesID = rs.getString("Course_ID");
                                     Grade = rs.getString("Grade");
-                                    //Attendances = rs.getString("Attendance");
+                                    //latestfix2611 checking null value
+                                    if (Grade == null){
+                                        Grade = "N/A";
+                                    }
+                                    else{
+                                        Grade = Grade + "%";
+                                    }
+
 
                                     System.out.print("ALL " + Courses + " ");
-                                    GradeList = GradeList +CoursesID + ": " + Course + ": " + Grade + "%" + "<br/>";
+                                    GradeList = GradeList +CoursesID + ": " + Course + ": " + Grade + "<br/>";
+                                    //latestfix2611END
                                 }
                                 emptyRecord.setText("<html>" + GradeList + "</html>");
                             }catch (SQLException other_SQLException) {
@@ -472,10 +480,18 @@ public class StudentInterface extends JFrame {
                                 Course = rs.getString("Course_Name");
                                 CourseID = rs.getString("Course_ID");
                                 Grade = rs.getString("Grade");
+                                //latestfix2611 checking null value
+                                if (Grade == null){
+                                    Grade = "N/A";
+                                }
+                                else{
+                                    Grade = Grade + "%";
+                                }
 
                                 System.out.print(Courses + " ");
                                 emptyRecord.setText("");
-                                emptyRecord.setText(emptyRecord.getText() + CourseID + ": " + Course + ": " + Grade + "%");
+                                emptyRecord.setText(emptyRecord.getText() + CourseID + ": " + Course + ": " + Grade);
+                                //latestfix2611END
                             }
                         }catch (SQLException other_SQLException) {
                         other_SQLException.printStackTrace();
@@ -512,8 +528,11 @@ public class StudentInterface extends JFrame {
                     emptyRecord.setText( " ");
                     //---------------Connection with Database---------------
                     //Extracting Cummulative GPA for this particular student
+
                     try{
-                        PreparedStatement statement = con.prepareStatement("SELECT count(T.Course_ID) as numCourses, sum(T.Grade) as gradeSum FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
+                        //latestfix2611 changed the query
+                        PreparedStatement statement = con.prepareStatement("SELECT count(T.Course_ID) as numCourses, sum(T.Grade) as gradeSum FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID and SMSSytem.T.Grade is not Null");
+                        //latestfix2611END
                         statement.setString(1, SID);
                         ResultSet rs = statement.executeQuery();
                         //Getting data out from the query
@@ -625,9 +644,14 @@ public class StudentInterface extends JFrame {
                                     Course = rs.getString("Course_Name");
                                     CoursesID = rs.getString("Course_ID");
                                     Attendances = rs.getString("Attendance");
+                                    //latestfix2611 checking null value
+                                    if (Attendances == null){
+                                        Attendances = "N/A";
+                                    }
 
                                     System.out.print("ALL " + Courses + " ");
                                     AttendanceList = AttendanceList + CoursesID + ": " + Course + ": " + Attendances + "<br/>";
+                                    //latestfix2611END
                                 }
                                 emptyAttendanceRecord.setText("<html>" + AttendanceList + "</html>");
                             }catch (SQLException other_SQLException) {
@@ -649,10 +673,15 @@ public class StudentInterface extends JFrame {
                                     Course = rs.getString("Course_Name");
                                     CourseID = rs.getString("Course_ID");
                                     Attendances = rs.getString("Attendance");
+                                    //latestfix2611  checking null value
+                                    if (Attendances == null){
+                                        Attendances = "N/A";
+                                    }
 
                                     System.out.print(Courses + " ");
                                     emptyAttendanceRecord.setText("");
                                     emptyAttendanceRecord.setText(emptyAttendanceRecord.getText() + CourseID + ": " + Course + ": " + Attendances);
+                                    //latestfix2611END
                                 }
                             }catch (SQLException other_SQLException) {
                                 other_SQLException.printStackTrace();
