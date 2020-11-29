@@ -34,6 +34,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         return userN;
     }
 
+    //Use username only remove NAME
     @Override
     public void DisplayUserGUI(String usersName) {
         // We need search bad First name, username to display the records correspondingly

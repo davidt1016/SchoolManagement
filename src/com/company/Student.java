@@ -30,7 +30,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String PassWord;
-
+    private static JTextArea courses;
     //For Grade interface
     private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, overallGPA, refreshGrade;
     private static JButton overallG, refreshG, enrol;
@@ -145,7 +145,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
 
         courseEnrolled.add("-------------");
-        courseEnrolled.add("   SHOW ALL  ");
+        courseEnrolled.add("LATEST 8 COURSES");
 
         setTitle("Student Interface");
         f = getContentPane();
@@ -179,7 +179,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
         l_username=new JLabel("Username: "); //  "Username:
         l_username.setBounds(50,115,150,30);
         l_dob=new JLabel("Date of Birth: "); // {Date of Birth retrieved from database}
-        l_dob.setBounds(50,155,150,30);
+        l_dob.setBounds(50,155,250,30);
         l_usertype=new JLabel("User Type: "); // "User Type:
         l_usertype.setBounds(50,195,150,30);
         l_newpass = new JLabel("");
@@ -222,11 +222,11 @@ public class Student extends JFrame implements UserInterfaceGUI {
         b_logoff=new JButton("Log Off");
         b_logoff.setBounds(480,4,80, 30);
         b_logoff.setBackground(new Color (250,5,5));
-        //b_logoff.setForeground(Color.white);
+        b_logoff.setForeground(Color.white);
         b_updatepass=new JButton("Update Password");
         b_updatepass.setBounds(400,45,140, 30);
         b_updatepass.setBackground(new Color (25,100,205));
-        //b_updatepass.setForeground(Color.white);
+        b_updatepass.setForeground(Color.white);
         b_confirm = new JButton("Confirm");
         b_confirm.setBounds(435,165,80, 30);
         b_confirm.setBackground(new Color (25,100,205));
@@ -370,7 +370,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     {
                         isCourseGradeSelected = true;
                         //If Show all is selected->Display all grade
-                        if (coursesOptions.getSelectedItem() == "   SHOW ALL  ")
+                        if (coursesOptions.getSelectedItem() == "LATEST 8 COURSES")
                         {
                             isSelectedAllGrade = true;
                         }
@@ -460,8 +460,11 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
                                     System.out.print("ALL " + Courses + " ");
                                     GradeList = GradeList +CoursesID + ": " + Course + ": " + Grade + "<br/>";
+
                                     //latestfix2611END
                                 }
+                                //Check Compatibility for ScrollPane
+                                //Edit here
                                 emptyRecord.setText("<html>" + GradeList + "</html>");
                             }catch (SQLException other_SQLException) {
                                 other_SQLException.printStackTrace();
@@ -592,7 +595,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     {
                         isCourseAttendanceSelected = true;
                         //All courses have been chosen to display attendance
-                        if(courseOptionsAttendance.getSelectedItem() == "   SHOW ALL  ")
+                        if(courseOptionsAttendance.getSelectedItem() == "LATEST 8 COURSES")
                         {
                             isSelectedAllAtten = true;
                         }
@@ -613,7 +616,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
         //Empty Attendance Record
         emptyAttendanceRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
                 "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
-        emptyAttendanceRecord.setBounds(70, 100, 300, 150);
+        emptyAttendanceRecord.setBounds(60, 65, 300, 190);
         emptyAttendanceRecord.setFont(new Font("Default", Font.PLAIN, 14));
         p_attend.add(emptyAttendanceRecord);
 

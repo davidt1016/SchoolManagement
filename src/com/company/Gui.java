@@ -64,11 +64,11 @@ public class Gui extends JFrame{
 
         //Create instance of JLabel for error message
         err_user = new JLabel("Username Does Not Exist!");
-        err_user.setBounds(100,170,150,30);
+        err_user.setBounds(100,170,300,30);
         err_user.setForeground(Color.RED);
         err_user.setVisible(false);
         err_pass=new JLabel("Password Doesn't match given Username!");
-        err_pass.setBounds(100,190,150,30);
+        err_pass.setBounds(100,190,300,30);
         err_pass.setForeground(Color.RED);
         err_pass.setVisible(false);
         p.add(err_user);
@@ -78,11 +78,11 @@ public class Gui extends JFrame{
         b_login=new JButton("Login");
         b_login.setBounds(60,135,90, 30);
         b_login.setBackground(new Color (25,100,205));
-        //b_login.setForeground(Color.white);
+        b_login.setForeground(Color.white);
         b_register=new JButton("Register");
         b_register.setBounds(210,135,90, 30);
         b_register.setBackground(new Color (25,100,205));
-        //b_register.setForeground(Color.white);
+        b_register.setForeground(Color.white);
         p.add(b_login);
         p.add(b_register);
 
@@ -93,7 +93,8 @@ public class Gui extends JFrame{
                 //********* Login Credential Here **************//
                 usernameS = tf_user.getText();
                 password = pass.getText();
-
+                err_user.setVisible(false);
+                err_pass.setVisible(false);
                 //Connection to Database Here
                 try {
                     Class.forName("com.mysql.cj.jdbc.Driver");
