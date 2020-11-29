@@ -220,7 +220,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         p_attend.setBackground(Color.white);
         p.add(p_attend);
         p_attend.setLayout(null);
-        attendanceTitle = new JLabel("<html><u>ATTENDANCE</html>");
+        attendanceTitle = new JLabel("<html><u>ABSENCES</html>");
         attendanceTitle.setFont(new Font("Default", Font.BOLD, 16));
         attendanceTitle.setBounds(160, 2, 120, 30);
         p_attend.add(attendanceTitle);
@@ -258,7 +258,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         p_attend.add(emptyAttendanceRecord);
 
         //For Edit Attendance button
-        edit_attendance = new JButton("Edit Attendance");
+        edit_attendance = new JButton("Edit Absences");
         edit_attendance.setBounds(160, 270, 130, 40);
         confirmA = new JButton("Confirm");
         confirmA.setBounds(130,225,80,40);

@@ -78,11 +78,11 @@ public class Gui extends JFrame{
         b_login=new JButton("Login");
         b_login.setBounds(60,135,90, 30);
         b_login.setBackground(new Color (25,100,205));
-        b_login.setForeground(Color.white);
+        //b_login.setForeground(Color.white);
         b_register=new JButton("Register");
         b_register.setBounds(210,135,90, 30);
         b_register.setBackground(new Color (25,100,205));
-        b_register.setForeground(Color.white);
+        //b_register.setForeground(Color.white);
         p.add(b_login);
         p.add(b_register);
 

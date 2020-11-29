@@ -6,10 +6,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Gui g = new Gui();
+        //Gui g = new Gui();
         //For new interface implementation methods
-        //Teacher t = new Teacher();
-        //t.DisplayUserGUI("teacher");
+        Teacher t = new Teacher();
+        t.DisplayUserGUI("teacher");
        //Student s = new Student();
         //s.DisplayUserGUI("Student");
        // Admin ad = new Admin();
