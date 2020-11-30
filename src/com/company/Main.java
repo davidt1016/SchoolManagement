@@ -14,7 +14,7 @@ public class Main {
         //s.DisplayUserGUI("Student");
         Admin ad = new Admin();
         ad.DisplayUserGUI("Admin");
-       // EditUser EUser = new EditUser();
-      //  EUser.DisplayUserGUI("TEST");
+        //EditUser EUser = new EditUser();
+       // EUser.DisplayUserGUI("TEST");
     }
 }
