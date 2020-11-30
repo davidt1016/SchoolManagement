@@ -11,9 +11,8 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class Teacher extends JFrame implements UserInterfaceGUI {
-
     //Dynamic Array for Storing All the Possible Courses for each Student
-    private Vector<String> courseEnrolled = new Vector<String>();
+    private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
     private static JComboBox coursesOptions;
     private static JComboBox courseOptionsAttendance;
@@ -23,16 +22,16 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
     private static JPasswordField currentpass,newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
-    protected String newPassWord;
+    private String PassWord;
 
     //For Grade interface
-    private static JLabel  CourseGrade, emptyRecord,  grade;
+    private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, refreshGrade;
     private static JButton enroll_course, refreshG, edit_grade, confirmG, cancelG;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
 
     //For Attendance Panel
-    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
+    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
     private static JButton refreshA, edit_attendance, confirmA, cancelA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
@@ -155,6 +154,8 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 cancelG.setEnabled(true);
                 confirmG.setVisible(true);
                 cancelG.setVisible(true);
+
+                SearchGUI SI = new SearchGUI(userN);
             }
         });
 
@@ -199,6 +200,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         refreshG.setBounds(395, 40, 20, 20);
         p_grade.add(refreshG);
 
+        /*
         //For Enroll Course button
         enroll_course = new JButton("Enroll Course");
         enroll_course.setBounds( 40,2,110, 30);
@@ -209,18 +211,20 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 if (e.getSource() == enroll_course)
                 {
                     //Display Enrol GUI
-                    //EnrollmentGUI eGUI = new EnrollmentGUI(userN);
+                    EnrollmentGUI eGUI = new EnrollmentGUI(userN);
                 }
             }
         });
         pa.add(enroll_course);
+
+         */
 
         //For attendance panel
         p_attend.setBounds( 490, 290, 445, 320);
         p_attend.setBackground(Color.white);
         p.add(p_attend);
         p_attend.setLayout(null);
-        attendanceTitle = new JLabel("<html><u>ABSENCES</html>");
+        attendanceTitle = new JLabel("<html><u>ATTENDANCE</html>");
         attendanceTitle.setFont(new Font("Default", Font.BOLD, 16));
         attendanceTitle.setBounds(160, 2, 120, 30);
         p_attend.add(attendanceTitle);
@@ -258,7 +262,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         p_attend.add(emptyAttendanceRecord);
 
         //For Edit Attendance button
-        edit_attendance = new JButton("Edit Absences");
+        edit_attendance = new JButton("Edit Attendance");
         edit_attendance.setBounds(160, 270, 130, 40);
         confirmA = new JButton("Confirm");
         confirmA.setBounds(130,225,80,40);
@@ -280,6 +284,8 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 cancelA.setEnabled(true);
                 confirmA.setVisible(true);
                 cancelA.setVisible(true);
+
+                SearchGUI SI = new SearchGUI(userN);
             }
         });
 
@@ -447,7 +453,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
-                        newPassWord = newpass.getText();
+                        PassWord = newpass.getText();
                         errorPass.setText(" ");
                         JOptionPane.showMessageDialog(f, "Update Password Successfully!");
                         l_currentpass.setText("");
@@ -539,6 +545,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
             else{
                 Teacher t = new Teacher();
                 t.DisplayUserGUI(userN);
+
             }
         }
 
