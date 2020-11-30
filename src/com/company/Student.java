@@ -29,10 +29,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private static JPasswordField newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
-    private String PassWord;
-    private static JTextArea courses;
+    protected String newPassWord;
     //For Grade interface
-    private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, overallGPA, refreshGrade;
+    private static JLabel  CourseGrade, emptyRecord, grade, overallGPA;
     private static JButton overallG, refreshG, enrol;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
@@ -40,7 +39,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private Boolean isSelectedAllAtten = false;
     private String GrCourse = " ";
     //For Attendance Panel
-    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
+    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
     private static JButton refreshA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
@@ -279,7 +278,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
-                        PassWord = newpass.getText();
+                        newPassWord = newpass.getText();
                         errorPass.setText(" ");
                         JOptionPane.showMessageDialog(f, "Update Password Successfully!");
                         l_newpass.setText("");

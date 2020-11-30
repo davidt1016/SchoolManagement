@@ -16,8 +16,8 @@ public class AccountGUI extends JFrame {
     PreparedStatement pst;
     Statement st;
     //Variables Initialization
-    private String FirstName, LastName, UsrName, PassWord, Birthdate; //String variables that store user input
-    private String chosenUsrType = " "; //String variables that store user input
+    protected String FirstName, LastName, UsrName, PassWord, Birthdate; //String variables that store user input
+    protected String chosenUsrType = " "; //String variables that store user input
     private int newStudentID;
     private int newTeacherID;
     //For JComboBox

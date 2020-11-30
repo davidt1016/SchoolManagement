@@ -23,16 +23,16 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
     private static JPasswordField currentpass,newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
-    private String PassWord;
+    protected String newPassWord;
 
     //For Grade interface
-    private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, refreshGrade;
+    private static JLabel  CourseGrade, emptyRecord,  grade;
     private static JButton enroll_course, refreshG, edit_grade, confirmG, cancelG;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
 
     //For Attendance Panel
-    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
+    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
     private static JButton refreshA, edit_attendance, confirmA, cancelA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
@@ -447,7 +447,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
-                        PassWord = newpass.getText();
+                        newPassWord = newpass.getText();
                         errorPass.setText(" ");
                         JOptionPane.showMessageDialog(f, "Update Password Successfully!");
                         l_currentpass.setText("");

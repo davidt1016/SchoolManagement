@@ -14,16 +14,16 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     //Variable Initializations
     private static Container frame;
     private ImageIcon icon;
-    private static JLabel label, title, searchUsrName, searchName, instructions;
-    private static JTextField inputUsrName, inputFullName;
-    private static JButton search, edit, cancelRecords, logoffNCancel, changePass, cancelPass, updatePass;
+    private static JLabel label, title, searchUsrName, instructions;
+    private static JTextField inputUsrName;
+    private static JButton  editInfo, editRecords, editCourse, logoffNCancel, changePass, cancelPass, updatePass;
     private static JPanel panel, accountPanel, recordPanel;
     //for password interfaces
     private static JLabel PassInst, currPass, newPass, confirmPass, errorPass;
     private static JPasswordField inputCurr, inputNewPass, inputConfirmPass;
-    private String PassW = " ";
+    protected String newPassW = " ";
     private String userN = " ";
-
+    protected String inUsrname = " ";
     @Override
     public void setusrN(String userName) {
         this.userN = userName;
@@ -50,7 +50,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Panel Interfaces
         panel.setBackground(Color.LIGHT_GRAY);
         panel.setLayout(null);
-        panel.setBounds(300, 60, 550, 550);
+        panel.setBounds(280, 160, 550, 375);
 
         //account panel
         accountPanel = new JPanel();
@@ -167,6 +167,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                     //For verifying new password matches confirmed password
                     if (Arrays.equals(inputNewPass.getPassword(), inputConfirmPass.getPassword()))
                     {
+                        newPassW = inputNewPass.getText();
                         //------------------------Data connection needed for updating admin password----------
                         JOptionPane.showMessageDialog(frame, "Update Password Successfully!");
                         //return back to original display
@@ -208,32 +209,50 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         recordPanel = new JPanel();
         recordPanel.setLayout(null);
         recordPanel.setBackground(Color.white);
-        recordPanel.setBounds(12, 190, 525, 350);
+        recordPanel.setBounds(12, 190, 525, 170);
         //Instructions for Admin
-        instructions = new JLabel("Please type in username and their full name to display their records:");
+        instructions = new JLabel("Please type in the username that you want to edit");
         instructions.setFont(new Font("Default", Font.PLAIN, 14));
-        instructions.setBounds(10, 5, 490, 30);
+        instructions.setBounds(95, 10, 490, 30);
         recordPanel.add(instructions);
-        //for displaying label of user full name
-        searchName = new JLabel("User Full Name: ");
-        searchName.setBounds(10,35, 150, 30);
-        recordPanel.add(searchName);
-        //Display JTextfield for user full name
-        inputFullName = new JTextField(160);
-        inputFullName.setBounds(110, 35, 160, 30);
-        recordPanel.add(inputFullName);
+
         //User name input
         searchUsrName = new JLabel("Username: ");
-        searchUsrName.setBounds(280, 35, 150, 30);
+        searchUsrName.setBounds(150, 40, 150, 30);
         recordPanel.add(searchUsrName);
         //input for username
         inputUsrName = new JTextField(160);
-        inputUsrName.setBounds(350,35, 160, 30);
+        inputUsrName.setBounds(220,40, 160, 30);
         recordPanel.add(inputUsrName);
+        //Edit Button
+        editInfo = new JButton("<html><div style='text-align: center;'>Edit<br> Information</div></html>");
+        editInfo.setBounds( 100, 80, 110, 70);
+        editInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //-------------------Database Connection needed----------------
+                //Retrieve data from the suggestive search of username
+                //Suggestive search for username and pass into line 238 with returned/selected usrname and uncomment
+                //calling account update information interface
+                EditUser edUsr = new EditUser();
+               // edUsr.DisplayUserGUI("test"); //Need to pass in username returned from suggestive search
+                dispose();
+
+            }
+        });
+        recordPanel.add(editInfo);
+        //Edit course button
+        editCourse = new JButton("<html><div style='text-align: center;'>Edit<br>Course</div></html>");
+        editCourse.setBounds(310, 80, 110, 70);
+        recordPanel.add(editCourse);
+        //Edit Records-overlapping for now
+        editRecords = new JButton("<html><div style='text-align: center;'>Edit<br>Performance</div></html>");
+        editRecords.setBounds(310, 70, 110, 70);
+        recordPanel.add(editRecords);
         //Search button
-        search = new JButton("SEARCH");
-        search.setBounds(205, 65, 130, 30);
-        recordPanel.add(search);
+        //search = new JButton("SEARCH");
+        //search.setBounds(205, 65, 130, 30);
+        //recordPanel.add(search);
 
         panel.add(recordPanel);
 
