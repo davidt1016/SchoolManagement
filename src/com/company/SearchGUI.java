@@ -189,10 +189,11 @@ public class SearchGUI extends JFrame{
         tf_search.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
+                //checking if there's input in search field
                 if(tf_search.getText().length()>0) {
                     resultData.clear();
 
-
+                    //fetching data from database that matches entered Name and displaying results in a JList
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
@@ -219,13 +220,14 @@ public class SearchGUI extends JFrame{
                         other_SQLException.printStackTrace();
                     }
                 }
+                //disabling and clearing search results if search box is empty
                 else if(tf_search.getText().length()==0){
                     resultData.clear();
                     resultList.setVisible(false);
                 }
             }
         });
-
+        //listener foe down arrow key move to search results from search box
         tf_search.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -245,16 +247,20 @@ public class SearchGUI extends JFrame{
             }
         });
 
+        //listner for UP and ENTER keys when in navigating search results
         resultList.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
+                //going back to search box when cursor is at item 0 of the result list and UP key is pushed
                 if(resultList.isSelectedIndex(0)) {
+
 
                     if (e.getKeyCode() == KeyEvent.VK_UP) {
                         System.out.println("UP key pressed");
                         tf_search.requestFocus();
                     }
                 }
+                //fetching selected user data when ENTER key is pushed
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     resultList.setVisible(false);
                     confirmSelectionL.setText("<html>" + " Edit and Press Confirm to Save: " + selectedName + "</html>");
@@ -301,9 +307,14 @@ public class SearchGUI extends JFrame{
         select = new JButton("Confirm");
         select.setBounds(150, 400, 300, 40);
         select.addActionListener(new ActionListener() {
+            //updating student data with entered values
             @Override
             public void actionPerformed(ActionEvent e) {
+                //checking which filed to update based on operating mode (grade or attendance)
+
+                //updating grade
                 if (mode == "GR") {
+                    //ensuring grade is not left blank
                     if (!tf_gr.getText().isBlank()) {
                         try {
                             pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ? where Student_ID = ? and Course_ID = ?;");
@@ -321,6 +332,7 @@ public class SearchGUI extends JFrame{
                         }
                     }
                 }
+                //updating attendance
                 else if (mode == "AT") {
                     if(!tf_att.getText().isBlank()) {
                         try {
