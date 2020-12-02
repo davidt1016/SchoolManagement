@@ -12,10 +12,11 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class Teacher extends JFrame implements UserInterfaceGUI {
+    //setting connection parameters
     Connection con;
-    PreparedStatement pst;
     PreparedStatement pst2;
     Statement st;
+
     //Dynamic Array for Storing All the Possible Courses for each Student
     private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
@@ -41,10 +42,11 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
 
+    //variables to hold teacher data
     private String userN = " ";
     Container f;
-    private String PID;
-    private String TID;
+    private String PID; // personal ID
+    private String TID; // teacher ID
     private String Name;
     private String DOB;
     private String currPass;
@@ -220,6 +222,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
 
                 if(isCourseGradeSelected) {
 
+                    //calling the search gui with modify grade mode
                     SearchGUI SI = new SearchGUI(GrCourse, userN, "GR");
                 }
                 else{
@@ -361,7 +364,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 cancelA.setVisible(true);
 
                 if(isCourseAttendanceSelected) {
-
+                    //calling the search gui with modify attendance mode
                     SearchGUI SI = new SearchGUI(AttCourse, userN, "AT");
                 }
                 else{
@@ -566,6 +569,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                             String newpassS = new String(newpass.getPassword());
                             System.out.print(currentpassS+"               ;");
                         System.out.print(currPass+"               ;");
+                            //updating password in database
                             if(currentpassS.equals(currPass)){
                                 try{
                                     pst2 = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
