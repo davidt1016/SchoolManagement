@@ -303,22 +303,42 @@ public class SearchGUI extends JFrame{
         select.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ?, Attendance = ? where Student_ID = ? and Course_ID = ?;");
-                    pst2.setString(1, tf_gr.getText());
-                    pst2.setString(2, tf_att.getText());
-                    pst2.setString(3, SID);
-                    pst2.setString(4, CourseN);
-                    //Execute the update on the database
-                    pst2.executeUpdate();
-                    Teacher T = new Teacher();
-                    T.DisplayUserGUI(userN);
-                    dispose();
+                if (mode == "GR") {
+                    if (!tf_gr.getText().isBlank()) {
+                        try {
+                            pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ? where Student_ID = ? and Course_ID = ?;");
+                            pst2.setString(1, tf_gr.getText());
+                            pst2.setString(2, SID);
+                            pst2.setString(3, CourseN);
+                            //Execute the update on the database
+                            pst2.executeUpdate();
+                            Teacher T = new Teacher();
+                            T.DisplayUserGUI(userN);
+                            dispose();
 
-                }catch (SQLException other_SQLException){
-                    other_SQLException.printStackTrace();
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
                 }
+                else if (mode == "AT") {
+                    if(!tf_att.getText().isBlank()) {
+                        try {
+                            pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Attendance = ? where Student_ID = ? and Course_ID = ?;");
+                            pst2.setString(1, tf_att.getText());
+                            pst2.setString(2, SID);
+                            pst2.setString(3, CourseN);
+                            //Execute the update on the database
+                            pst2.executeUpdate();
+                            Teacher T = new Teacher();
+                            T.DisplayUserGUI(userN);
+                            dispose();
 
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+                }
             }
         });
         panel.add(select);
