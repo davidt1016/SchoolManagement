@@ -97,11 +97,12 @@ public class Student extends JFrame implements UserInterfaceGUI {
         //Connection here with database to display information for Account, Grade, and Attendance
         //For combo box, a list of courses taken by the students
         //Retrieve a list of courses from Database and do "courseEnrolled.add(courses);"
+
+        //fetching user info
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
             st = con.createStatement();
-            //fetching username
             PreparedStatement statement = con.prepareStatement("SELECT Student_ID, Name, DOB FROM SMSSytem.Student where username = ?;");
             statement.setString(1, usrN);
             ResultSet rs = statement.executeQuery();
@@ -119,11 +120,11 @@ public class Student extends JFrame implements UserInterfaceGUI {
             other_SQLException.printStackTrace();
         }
 
+        //fetching courses for drop down list
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             //con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
             //st = con.createStatement();
-            //fetching username
             PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name, C.Teacher_ID, T.Grade, T.Attendance FROM SMSSytem.Course C, SMSSytem.Takes T where SMSSytem.T.Student_ID = ? and SMSSytem.C.Course_ID = SMSSytem.T.Course_ID");
             statement.setString(1, SID);
             ResultSet rs = statement.executeQuery();

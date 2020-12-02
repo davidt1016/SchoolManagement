@@ -7,10 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class Teacher extends JFrame implements UserInterfaceGUI {
+    Connection con;
+    PreparedStatement pst;
+    PreparedStatement pst2;
+    Statement st;
     //Dynamic Array for Storing All the Possible Courses for each Student
     private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
@@ -38,6 +43,20 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
 
     private String userN = " ";
     Container f;
+    private String PID;
+    private String TID;
+    private String Name;
+    private String DOB;
+    private String currPass;
+
+    private String Courses;
+    private String CoursesID;
+
+    private String GrCourse = " ";
+    private String AttCourse = " ";
+    private String[] AttCourseParts;
+    private String[] GrCourseParts;
+
     @Override
     public void setusrN(String userName) {
         this.userN = userName;
@@ -55,7 +74,47 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         //Connection here with database to display information for Account, Grade, and Attendance
         //For combo box, a list of courses taken by the students
         courseEnrolled.add("-------------");
-        courseEnrolled.add("   SHOW ALL  ");
+        //fetching user info
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+            st = con.createStatement();
+            PreparedStatement statement = con.prepareStatement("SELECT Teacher_ID, Name, DOB FROM SMSSytem.Teacher where username = ?;");
+            statement.setString(1, userN);
+            ResultSet rs = statement.executeQuery();
+            //Getting data out from the query
+            while (rs.next()) {
+                TID = rs.getString("Teacher_ID");
+                PID = userN + TID;
+                Name = rs.getString("Name");
+                DOB = rs.getString("DOB");
+                System.out.print("usrName: " + userN);
+            }
+        }catch (ClassNotFoundException classNotFoundException ) {
+            classNotFoundException.printStackTrace();
+        }catch (SQLException other_SQLException) {
+            other_SQLException.printStackTrace();
+        }
+
+        //fetching courses for drop down list
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            //con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+            //st = con.createStatement();
+            PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, C.Course_Name FROM SMSSytem.Course C where C.Teacher_ID = ?");
+            statement.setString(1, TID);
+            ResultSet rs = statement.executeQuery();
+            //Getting data out from the query
+            while (rs.next()) {
+                Courses = rs.getString("Course_Name");
+                CoursesID = rs.getString("Course_ID");
+
+                System.out.print(Courses + " ");
+                courseEnrolled.add(CoursesID + ": " + Courses);
+            }
+        }catch (SQLException other_SQLException) {
+            other_SQLException.printStackTrace();
+        }
 
         //Create instance of JPanel
         JPanel p=new JPanel();
@@ -107,10 +166,14 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                         isCourseGradeSelected = false;
 
                     }
-                    //a course or show all option has been selected
+                    //a course has been selected
                     else
                     {
                         isCourseGradeSelected = true;
+                        GrCourse = (String) coursesOptions.getSelectedItem();
+                        GrCourseParts = GrCourse.split("\\:");
+                        GrCourse = GrCourseParts[0];
+                        System.out.print(GrCourse);
                     }
                 }
             }
@@ -155,7 +218,13 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 confirmG.setVisible(true);
                 cancelG.setVisible(true);
 
-                SearchGUI SI = new SearchGUI(userN);
+                if(isCourseGradeSelected) {
+
+                    SearchGUI SI = new SearchGUI(GrCourse, userN, "GR");
+                }
+                else{
+                    emptyRecord.setText("Please Select a Course First");
+                }
             }
         });
 
@@ -187,11 +256,12 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                     //A course is selected, hide the emptyRecord messages
                     if ( isCourseGradeSelected )
                     {
-                        emptyRecord.setText(" ");
+                        emptyRecord.setText("You have selected " + GrCourse + "\n Click \"Edit Attendance\" to edit a Student's grade ");
                     }
-                    //Display all of the courses taken and their grade
+                    //Display all of the courses taken and their grade //doesn't make sense teacher has no grade
                     else
                     {
+                        emptyRecord.setText("Select a Course");
 
                     }
                 }
@@ -249,6 +319,11 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                     else
                     {
                         isCourseAttendanceSelected = true;
+                        AttCourse = (String) courseOptionsAttendance.getSelectedItem();
+                        AttCourseParts = AttCourse.split("\\:");
+                        AttCourse = AttCourseParts[0];
+                        System.out.print(AttCourse);
+
                     }
                 }
             }
@@ -285,9 +360,21 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 confirmA.setVisible(true);
                 cancelA.setVisible(true);
 
-                SearchGUI SI = new SearchGUI(userN);
+                if(isCourseAttendanceSelected) {
+
+                    SearchGUI SI = new SearchGUI(AttCourse, userN, "AT");
+                }
+                else{
+                    emptyAttendanceRecord.setText("Please Select a Course First");
+                }
+
+
+
+
             }
         });
+
+
 
         cancelA.addActionListener(new ActionListener() {
             @Override
@@ -309,16 +396,15 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 //Refresh for attendance button is pressed
                 if ( e.getSource()== refreshA)
                 {
-                    //a course has been selected or select ALL has been selected
+                    //a course has been selected
                     if(isCourseAttendanceSelected)
                     {
-                        emptyAttendanceRecord.setText(" ");
+                        emptyAttendanceRecord.setText("You have selected " + AttCourse + "\n Click \"Edit Attendance\" to edit a Student's grade ");
                     }
                     //None has been selected
                     else
                     {
-
-                    }
+                        emptyAttendanceRecord.setText("Select a Course");}
                 }
 
             }
@@ -372,6 +458,13 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
 
         currentpass = new JPasswordField();
         currentpass.setBounds(460,70,150, 30);
+
+        l_name.setText(l_name.getText()+" "+Name);
+        l_username.setText(l_username.getText()+" "+userN);
+        l_dob.setText(l_dob.getText()+" "+DOB);
+        l_id.setText(l_id.getText()+" "+PID);
+        l_usertype.setText(l_usertype.getText()+" Teacher");
+
         newpass = new JPasswordField();
         newpass.setBounds(460,110,150, 30);
         confirmpass = new JPasswordField();
@@ -453,9 +546,46 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
+                        //fetching old password from database
+                        try{
+                            st = con.createStatement();
+                            //fetching username
+                            PreparedStatement statement = con.prepareStatement("SELECT password FROM SMSSytem.Users where username = ?;");
+                            statement.setString(1, userN);
+                            ResultSet rs = statement.executeQuery();
+
+                            while (rs.next()) {
+                                currPass = rs.getString("password");
+                            }
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+
+                            //comparing old password with the entered one and updating it if they match
+                            String currentpassS = new String(currentpass.getPassword());
+                            String newpassS = new String(newpass.getPassword());
+                            System.out.print(currentpassS+"               ;");
+                        System.out.print(currPass+"               ;");
+                            if(currentpassS.equals(currPass)){
+                                try{
+                                    pst2 = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
+                                    pst2.setString(2, userN );
+                                    pst2.setString(1, newpassS);
+                                    pst2.executeUpdate();
+                                    JOptionPane.showMessageDialog(f, "Update Password Successfully!");
+                                }catch (SQLException other_SQLException){
+                                    other_SQLException.printStackTrace();
+                                }
+
+                            }
+                            else{
+                                System.out.print("Current Password Doesn't Match Our Records ");
+                                JOptionPane.showMessageDialog(f, "Wrong Password Entered!");
+                            }
+
+
                         PassWord = newpass.getText();
                         errorPass.setText(" ");
-                        JOptionPane.showMessageDialog(f, "Update Password Successfully!");
                         l_currentpass.setText("");
                         l_newpass.setText("");
                         l_confirmpass.setText("");
