@@ -2,19 +2,32 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
+import java.sql.*;
 import java.util.Arrays;
+import java.util.Vector;
+
+//newest
 
 public class Admin extends JFrame implements UserInterfaceGUI {
+    //connection paramteres
+    Connection con;
+    PreparedStatement pst;
+    PreparedStatement pst2;
+    Statement st, st2;
+
+    //Jlist to display search results
+    private static JList resultList;
 
     //Variable Initializations
     private static Container frame;
     private ImageIcon icon;
-    private static JLabel label, title, searchUsrName, instructions;
+    private static JLabel label, title, searchUsrName, instructions, confirmSelectionL;
     private static JTextField inputUsrName;
     private static JButton  editInfo, editRecords, editCourse, logoffNCancel, changePass, cancelPass, updatePass;
     private static JPanel panel, accountPanel, recordPanel;
@@ -24,6 +37,11 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     protected String newPassW = " ";
     private String userN = " ";
     protected String inUsrname = " ";
+
+    private String selectedName = "";
+    private String selectedType = "";
+    private String currPassS;
+
     @Override
     public void setusrN(String userName) {
         this.userN = userName;
@@ -42,6 +60,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Just one panel to display one thing
         userN = usersName;
 
+        //instantiating the results vector
+        Vector<String> resultData = new Vector<String>();
+
         setTitle("Administrator Interface");
         frame = getContentPane();
         label = new JLabel();
@@ -50,7 +71,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Panel Interfaces
         panel.setBackground(Color.LIGHT_GRAY);
         panel.setLayout(null);
-        panel.setBounds(280, 160, 550, 375);
+        panel.setBounds(280, 120, 550, 490);
 
         //account panel
         accountPanel = new JPanel();
@@ -58,11 +79,14 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         accountPanel.setBounds(12, 10, 525, 170);
         accountPanel.setBackground(Color.white);
 
+
         //title of the interface
         title = new JLabel("<html><u>Welcome, Administrator!</html>");
         title.setFont(new Font("Default", Font.BOLD, 18));
         title.setBounds(150, 5, 300, 30);
         accountPanel.add(title);
+
+
 
         //For changing password for admin account
         //Password Modification interfaces
@@ -79,6 +103,8 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         inputCurr.setBorder(new LineBorder(Color.white));
         inputCurr.setBackground(Color.white);
         accountPanel.add(inputCurr);
+
+
 
         //new password
         newPass = new JLabel(" ");
@@ -102,6 +128,11 @@ public class Admin extends JFrame implements UserInterfaceGUI {
 
         inputConfirmPass.setBounds(120, 120, 150, 20);
         accountPanel.add(inputConfirmPass);
+
+
+
+
+
 
         //Button for updating the password
         updatePass = new JButton("Update Password");
@@ -145,7 +176,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                 {
                     Admin ad = new Admin();
                     ad.DisplayUserGUI(userN);
-
+                    dispose();
                 }
             }
         });
@@ -159,22 +190,71 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Admin pressed change password through changePass button
-                if (inputNewPass.getText().length() >= 6 || inputConfirmPass.getText().length() >= 6 || inputCurr.getText().length() >= 6)
+                if (inputNewPass.getText().length() >= 6 && inputConfirmPass.getText().length() >= 6 && inputCurr.getText().length() >= 6)
                 {
-                    errorPass.setText(" ");
-                    //------------------------Data connection needed to verfiy current admin password is correct----------
-                    //Original pass must be correct first in order to proceed to process inputNewpass and inputConfirmPass
                     //For verifying new password matches confirmed password
+
                     if (Arrays.equals(inputNewPass.getPassword(), inputConfirmPass.getPassword()))
                     {
+
+                        //fetching old password from database
+                        try{
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            st2 = con.createStatement();
+                            //fetching username
+                            PreparedStatement statement2 = con.prepareStatement("SELECT password FROM SMSSytem.Users where username = ?;");
+                            statement2.setString(1, userN);
+                            ResultSet rs = statement2.executeQuery();
+
+                            while (rs.next()) {
+                                currPassS = rs.getString("password");
+                            }
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }catch (ClassNotFoundException classNotFoundException ) {
+                            classNotFoundException.printStackTrace();
+                        }
+
+                        //comparing old password with the entered one and updating it if they match
+                        String currentpassS = new String(inputCurr.getPassword());
+                        String newpassS = new String(inputNewPass.getPassword());
+                        System.out.print(currentpassS+"               ;");
+                        System.out.print(currPass+"               ;");
+                        //updating password in database
+                        if(currentpassS.equals(currPassS)){
+                            try{
+                                pst2 = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
+                                pst2.setString(2, userN );
+                                pst2.setString(1, newpassS);
+                                pst2.executeUpdate();
+                                JOptionPane.showMessageDialog(frame, "Update Password Successfully!");
+                            }catch (SQLException other_SQLException){
+                                other_SQLException.printStackTrace();
+                            }
+
+                        }
+                        else{
+                            System.out.print("Current Password Doesn't Match Our Records ");
+                            JOptionPane.showMessageDialog(frame, "Wrong Password Entered!");
+                        }
+
+                        errorPass.setText(" ");
                         newPassW = inputNewPass.getText();
-                        //------------------------Data connection needed for updating admin password----------
-                        JOptionPane.showMessageDialog(frame, "Update Password Successfully!");
                         //return back to original display
                         Admin administrator = new Admin();
                         administrator.DisplayUserGUI(userN);
                     }
+                    //Password and confirmed Password do not match
+                    else{
+                        //Error occur with the confirmed password and the password doesnt match
+                        inputNewPass.setText(null);
+                        inputConfirmPass.setText(null);
+                        inputCurr.setText(null);
+                        errorPass.setText("<html><font color='Red'>Passwords Do Not Match. Please Try Again! </font></html>");
+                    }
                 }
+
                 else
                 {
                     inputNewPass.setText(null);
@@ -198,6 +278,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                 if ( e.getSource() == logoffNCancel )
                 {
                     Gui login = new Gui();
+                    dispose();
                 }
             }
         });
@@ -209,7 +290,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         recordPanel = new JPanel();
         recordPanel.setLayout(null);
         recordPanel.setBackground(Color.white);
-        recordPanel.setBounds(12, 190, 525, 170);
+        recordPanel.setBounds(12, 190, 525, 280);
         //Instructions for Admin
         instructions = new JLabel("Please type in the username that you want to edit");
         instructions.setFont(new Font("Default", Font.PLAIN, 14));
@@ -224,9 +305,16 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         inputUsrName = new JTextField(160);
         inputUsrName.setBounds(220,40, 160, 30);
         recordPanel.add(inputUsrName);
+
+        //JList to display search results
+        resultList = new JList<String>(resultData);
+        resultList.setBounds(220, 80, 160, 95);
+        resultList.setBorder(BorderFactory.createLineBorder(Color.lightGray));
+        resultList.setVisible(false);
+
         //Edit Button
         editInfo = new JButton("<html><div style='text-align: center;'>Edit<br> Information</div></html>");
-        editInfo.setBounds( 100, 80, 110, 70);
+        editInfo.setBounds( 100, 190, 110, 70);
         editInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -234,8 +322,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                 //Retrieve data from the suggestive search of username
                 //Suggestive search for username and pass into line 238 with returned/selected usrname and uncomment
                 //calling account update information interface
+
                 EditUser edUsr = new EditUser();
-               // edUsr.DisplayUserGUI("test"); //Need to pass in username returned from suggestive search
+                edUsr.DisplayUserGUI(selectedName); //Need to pass in username returned from suggestive search
                 dispose();
 
             }
@@ -243,11 +332,28 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         recordPanel.add(editInfo);
         //Edit course button
         editCourse = new JButton("<html><div style='text-align: center;'>Edit<br>Course</div></html>");
-        editCourse.setBounds(310, 80, 110, 70);
+        editCourse.setBounds(310, 190, 110, 70);
+        editCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                dispose();
+            }
+        });
         recordPanel.add(editCourse);
         //Edit Records-overlapping for now
         editRecords = new JButton("<html><div style='text-align: center;'>Edit<br>Performance</div></html>");
-        editRecords.setBounds(310, 70, 110, 70);
+        editRecords.setBounds(310, 190, 110, 70);
+        editRecords.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //For editing performance for students
+                        SearchGUI sG = new SearchGUI("ALL",selectedName, "BOTH");
+                        dispose();
+                    }
+                }
+        );
         recordPanel.add(editRecords);
         //Search button
         //search = new JButton("SEARCH");
@@ -259,6 +365,11 @@ public class Admin extends JFrame implements UserInterfaceGUI {
 
 
         add(panel);
+
+        //confirm selection label
+        confirmSelectionL = new JLabel();
+        confirmSelectionL.setBounds(220,80,350,35);
+        recordPanel.add(confirmSelectionL);
 
         //Image handling/Resizing
         icon = new ImageIcon(this.getClass().getResource("Admin.jpg"));
@@ -272,7 +383,140 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         setSize(1100,700);
         setLocationRelativeTo(null);
         setVisible(true);
+
+        //action listener for change in search text filed
+        inputUsrName.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                //checking if there's input in search field
+                if(inputUsrName.getText().length()>0) {
+                    resultData.clear();
+
+                    //fetching data from database that matches entered Name and displaying results in a JList
+                    try {
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                        st = con.createStatement();
+                        PreparedStatement statement = con.prepareStatement("SELECT U.username, U.userType FROM SMSSytem.Users U where U.username like ?");
+                        String enteredName = inputUsrName.getText();
+                        statement.setString(1, "%" + enteredName.trim() + "%");
+                        ResultSet rs = statement.executeQuery();
+                        //System.out.print(enteredName + " ");
+                        resultData.clear();
+                        resultList.updateUI();
+                        while (rs.next()) {
+                            if(!rs.getString("username").equals("Admin")) {
+                                String foundName = "<html>" + rs.getString("username") + ",&nbsp;&nbsp;&nbsp;&nbsp;" + "@" + "<i>" + rs.getString("userType") + "</i>" + "</html>";
+                                confirmSelectionL.setVisible(false);
+                                resultList.setVisible(true);
+                                resultData.add(foundName);
+                                resultList.updateUI();
+                            }
+                        }
+
+                    }catch (ClassNotFoundException classNotFoundException ) {
+                        classNotFoundException.printStackTrace();
+                    }catch (SQLException other_SQLException) {
+                        other_SQLException.printStackTrace();
+                    }
+                }
+                //disabling and clearing search results if search box is empty
+                else if(inputUsrName.getText().length()==0){
+                    resultData.clear();
+                    resultList.setVisible(false);
+                }
+            }
+        });
+
+        //listener for down arrow key move to search results from search box
+        inputUsrName.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    System.out.println("Down key pressed");
+                    resultList.requestFocusInWindow();
+                }
+
+            }
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+
+        //listner for UP and ENTER keys when in navigating search results
+        resultList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //going back to search box when cursor is at item 0 of the result list and UP key is pushed
+                if(resultList.isSelectedIndex(0)) {
+
+
+                    if (e.getKeyCode() == KeyEvent.VK_UP) {
+                        System.out.println("UP key pressed");
+                        inputUsrName.requestFocus();
+                    }
+                }
+                //fetching selected user data when ENTER key is pushed
+                if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                    resultList.setVisible(false);
+                    confirmSelectionL.setText("<html>" + selectedName + "</html>");
+                    selectedType = ((selectedType.split("&nbsp;@")[1]).split("</i>")[0]).split("<i>")[1];
+                    System.out.print(selectedType + "\n");
+                    inputUsrName.grabFocus();
+                    confirmSelectionL.setVisible(true);
+
+                    if(selectedType.equals("Students")){
+                        editCourse.setVisible(false);
+                        editRecords.setVisible(true);
+
+                    }
+
+                    else if(selectedType.equals("Teachers")){
+                        editCourse.setVisible(true);
+                        editRecords.setVisible(false);
+                    }
+
+                }
+            }
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+
+        //listener for fetching selected result from result list
+        resultList.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent l) {
+                if (!l.getValueIsAdjusting()) {
+                    selectedName = resultList.getSelectedValue().toString();
+                    selectedName = selectedName.split(",")[0].split("<html>")[1];
+
+                    selectedType = resultList.getSelectedValue().toString();
+                    System.out.print(selectedName + "\n");
+                    System.out.print(selectedType + "\n");
+                }
+            }
+        });
+
+
+
+
+        recordPanel.add(resultList);
+
     }
+
+
+
     //For Showing Messages after the Window has been disposed
     class WL implements WindowListener
     {

@@ -209,7 +209,6 @@ public class EnrollmentGUI extends JFrame{
         enroll.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.print("waaaaa5wwa5a5a");
                 try{
                     pst2 = con.prepareStatement("insert into Takes(Student_ID, Course_ID, Attendance, Grade)values(?,?,null,null)");
                     pst2.setString(1, Integer.toString(SN) );
@@ -281,6 +280,7 @@ public class EnrollmentGUI extends JFrame{
             {
                 //Display the Enrollment Interface
                 EnrollmentGUI EGUI = new EnrollmentGUI(userN, SN);
+
             }
         }
         @Override

@@ -6,9 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +33,13 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
     protected String name = null;
     protected String password =null;
     protected String date = null;
+    private String userType = "";
+
+    //Storing old user Info
+    private String PID = "";
+    private String Name = "";
+    private String DOB = "";
+    private String oldPass = "";
 
     Container f;
     //Check for date format yyyy/mm/dd
@@ -86,24 +91,46 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
         //Retrieve user info according their username and username is stored as variable usrN
         //Current Account info
         //---------User ID --------
+
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+            st = con.createStatement();
+            PreparedStatement statement = con.prepareStatement("SELECT U.password, U.userType FROM SMSSytem.Users U where U.username like ?");
+            statement.setString(1, usrN);
+            ResultSet rs = statement.executeQuery();
+            //System.out.print(enteredName + " ");
+            while (rs.next()) {
+                userType = rs.getNString("userType");
+                oldPass = rs.getNString("password");
+            }
+
+        }catch (ClassNotFoundException classNotFoundException ) {
+            classNotFoundException.printStackTrace();
+        }catch (SQLException other_SQLException) {
+            other_SQLException.printStackTrace();
+        }
+
+
         currentUsrID = new JLabel("User ID: ");
-        currentUsrID.setBounds(20, 40, 100, 15);
+        currentUsrID.setBounds(20, 40, 400, 15);
         currInfo.add(currentUsrID);
         //----------Username----------
         currentUserName = new JLabel("Username: ");
-        currentUserName.setBounds(20, 70, 100, 15);
+        currentUserName.setBounds(20, 70, 400, 15);
         currInfo.add(currentUserName);
         //----------Name-----------
         currentName = new JLabel("Full Name: ");
-        currentName.setBounds(20, 100, 100, 15);
+        currentName.setBounds(20, 100, 400, 15);
         currInfo.add(currentName);
         //-------------DOB-----------
-        currentDOB = new JLabel("Date of Birth:");
-        currentDOB.setBounds(20, 130, 100, 15);
+        currentDOB = new JLabel("Date of Birth: ");
+        currentDOB.setBounds(20, 130, 400, 15);
         currInfo.add(currentDOB);
         //----------User Type---------
         currentUsrType = new JLabel("User Type: ");
-        currentUsrType.setBounds(20, 160, 100, 15);
+        currentUsrType.setBounds(20, 160, 400, 15);
         currInfo.add(currentUsrType);
 
         background.add(currInfo);
@@ -161,6 +188,65 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
         errorDate.setFont(new Font("Default", Font.BOLD, 12));
         errorDate.setVisible(false);
         editInfo.add(errorDate);
+
+        if(userType.equals("Students")){
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                st = con.createStatement();
+                PreparedStatement statement = con.prepareStatement("SELECT Student_ID, Name, DOB FROM SMSSytem.Student where userName = ?;");
+                statement.setString(1, usrN);
+                ResultSet rs = statement.executeQuery();
+                //Getting data out from the query
+                while (rs.next()) {
+                    PID = rs.getString("Student_ID");
+                    Name = rs.getString("Name");
+                    DOB = rs.getString("DOB");
+                    System.out.print("usrName: " + usrN);
+                }
+            }catch (ClassNotFoundException classNotFoundException ) {
+                classNotFoundException.printStackTrace();
+            }catch (SQLException other_SQLException) {
+                other_SQLException.printStackTrace();
+            }
+        }
+
+        else if(userType.equals("Teachers")){
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                st = con.createStatement();
+                PreparedStatement statement = con.prepareStatement("SELECT Teacher_ID, Name, DOB FROM SMSSytem.Teacher where userName = ?;");
+                statement.setString(1, usrN);
+                ResultSet rs = statement.executeQuery();
+                //Getting data out from the query
+                while (rs.next()) {
+                    PID = rs.getString("Teacher_ID");
+                    Name = rs.getString("Name");
+                    DOB = rs.getString("DOB");
+                    System.out.print("usrName: " + usrN);
+                }
+            }catch (ClassNotFoundException classNotFoundException ) {
+                classNotFoundException.printStackTrace();
+            }catch (SQLException other_SQLException) {
+                other_SQLException.printStackTrace();
+            }
+
+        }
+
+        //displaying user info inside lables
+        currentUserName.setText(currentUserName.getText()+usrN);
+        currentName.setText(currentName.getText()+Name);
+        currentDOB.setText(currentDOB.getText()+DOB);
+        currentUsrID.setText(currentUsrID.getText()+PID);
+        currentUsrType.setText(currentUsrType.getText()+userType);
+
+        //displaying user info inside text fileds
+        inputNewName.setText(Name);
+        inputNewDOB.setText(DOB);
+
+
+
 
         //-------------Buttons for cancel, update-----------
         //Update Button
@@ -257,8 +343,114 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                     //----------------Data Connection needed---------------
                     //name, password, and date variable can be used directly=>it stores either NULL (user hasn't updated anything)
                     //or some string of characters, where user has type in something
+                    if(password != null){
+                        try{
+                            pst = con.prepareStatement("Update Users Set password = ? where userName = ?");
+                            pst.setString(1, password);
+                            pst.setString(2, usrN);
+                            //Execute the update on the database
+                            pst.executeUpdate();
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+
+                    if(userType.equals("Students")) {
+                        try {
+                            //actual insertion into the Students table
+                            pst = con.prepareStatement("Update Student Set Name = ?, DOB = ? where userName = ?");
+                            if(name == null){
+                                name = Name;
+                            }
+                            if(date == null){
+                                date = DOB;
+                            }
+                            pst.setString(1, name);
+                            pst.setString(2, date);
+                            pst.setString(3, usrN);
+                            //Execute the update on the database
+                            pst.executeUpdate();
+
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+
+                    else if(userType.equals("Teachers")) {
+                        try {
+                            //actual insertion into the Teachers table
+                            pst = con.prepareStatement("Update Teacher Set Name = ?, DOB = ? where userName = ?");
+                            if(name == null){
+                                name = Name;
+                            }
+                            if(date == null){
+                                date = DOB;
+                            }
+                            pst.setString(1, name);
+                            pst.setString(2, date);
+                            pst.setString(3, usrN);
+                            //Execute the update on the database
+                            pst.executeUpdate();
+
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+
+                    if(userType.equals("Students")){
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            st = con.createStatement();
+                            PreparedStatement statement = con.prepareStatement("SELECT Student_ID, Name, DOB FROM SMSSytem.Student where userName = ?;");
+                            statement.setString(1, usrN);
+                            ResultSet rs = statement.executeQuery();
+                            //Getting data out from the query
+                            while (rs.next()) {
+                                PID = rs.getString("Student_ID");
+                                Name = rs.getString("Name");
+                                DOB = rs.getString("DOB");
+                                System.out.print("usrName: " + usrN);
+                            }
+                        }catch (ClassNotFoundException classNotFoundException ) {
+                            classNotFoundException.printStackTrace();
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+
+                    else if(userType.equals("Teachers")){
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            st = con.createStatement();
+                            PreparedStatement statement = con.prepareStatement("SELECT Teacher_ID, Name, DOB FROM SMSSytem.Teacher where userName = ?;");
+                            statement.setString(1, usrN);
+                            ResultSet rs = statement.executeQuery();
+                            //Getting data out from the query
+                            while (rs.next()) {
+                                PID = rs.getString("Teacher_ID");
+                                Name = rs.getString("Name");
+                                DOB = rs.getString("DOB");
+                                System.out.print("usrName: " + usrN);
+                            }
+                        }catch (ClassNotFoundException classNotFoundException ) {
+                            classNotFoundException.printStackTrace();
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+
+                    }
+
+                    //displaying user info inside lables
+                    currentName.setText(currentName.getText().split(":")[0] + ": " + Name);
+                    currentDOB.setText(currentDOB.getText().split(":")[0] + ": " + DOB);
+
+
+
                     JOptionPane.showMessageDialog(f, "<html>"+UpdateList+"</html>");
                 }
+
             }
         });
         editInfo.add(update);
@@ -295,10 +487,12 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
             {
                 Admin ad = new Admin();
                 ad.DisplayUserGUI(usrN);
+                dispose();
             }
             else{
                 EditUser eU = new EditUser();
                 eU.DisplayUserGUI(usrN);
+                dispose();
             }
         }
         @Override
@@ -309,8 +503,9 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                 JOptionPane.showMessageDialog(null , "Return to Admin Interface!");
             }
             else{
-               EditUser eU = new EditUser();
-               eU.DisplayUserGUI(usrN);
+                EditUser eU = new EditUser();
+                eU.DisplayUserGUI(usrN);
+                dispose();
             }
         }
         @Override
