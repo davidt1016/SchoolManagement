@@ -227,7 +227,7 @@ public class SearchGUI extends JFrame{
                 }
             }
         });
-        //listener foe down arrow key move to search results from search box
+        //listener for down arrow key move to search results from search box
         tf_search.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -292,6 +292,7 @@ public class SearchGUI extends JFrame{
             }
         });
 
+        //listener for fetching selected result from result list
         resultList.addListSelectionListener(new ListSelectionListener() {
 
             @Override

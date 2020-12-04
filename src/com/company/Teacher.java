@@ -544,8 +544,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                 //Validating the length of the password has to be at least 6 characters
                 if ( currentpass.getText().length() >= 6 && newpass.getText().length() >= 6 && confirmpass.getText().length() >= 6)
                 {
-                    //Checking if password matches or not
-                    //Password and confirmed Password match
+                    //Checking if passwords match or not
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
