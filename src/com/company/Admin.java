@@ -41,6 +41,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     private String selectedName = "";
     private String selectedType = "";
     private String currPassS;
+    protected int teacherID =0;
 
     @Override
     public void setusrN(String userName) {
@@ -336,7 +337,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         editCourse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //-------------Data Connection Needed Here for Assigning courses for Teacher------------
+                //------------need to retrieve usr input name and the corresponding teacherID
+                //AssignCourse aCourse = new AssignCourse(teacherID);
                 dispose();
             }
         });

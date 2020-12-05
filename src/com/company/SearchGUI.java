@@ -164,7 +164,7 @@ public class SearchGUI extends JFrame{
         if (usrType == "Admin")
         {
             title.setText("<html><u>Edit"+" "+userN+" Performance Records</html>");
-            title.setBounds(80, 5, 300, 20);
+            title.setBounds(80, 5, 420, 60);
             l_search.setText(null);
             tf_search.setEditable(false);
             tf_search.setBorder(null);

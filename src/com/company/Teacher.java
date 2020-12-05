@@ -189,12 +189,11 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         //Refresh Button
         refreshG = new JButton(refreshIcon);
         //When there is no record
-        emptyRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
-                "click SHOW ALL to display all <br> of the courses you have taken before.<br>" +
-                "If you are not enrol in any course, please click ENROLL button to add course.</html>");
+        emptyRecord = new JLabel("");
         emptyRecord.setBounds(60, 65, 300, 190);
         emptyRecord.setFont(new Font("Default", Font.PLAIN, 14));
         p_grade.add(emptyRecord);
+        refreshG.setVisible(false);
 
         //For Edit Grade button
         edit_grade = new JButton("Edit Grade");
@@ -214,20 +213,16 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         edit_grade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //If Edit Grade is called
-                confirmG.setEnabled(true);
-                cancelG.setEnabled(true);
-                confirmG.setVisible(true);
-                cancelG.setVisible(true);
-
                 if(isCourseGradeSelected) {
 
                     //calling the search gui with modify grade mode
                     SearchGUI SI = new SearchGUI(GrCourse, userN, "GR");
+                    dispose();
                 }
                 else{
                     emptyRecord.setText("Please Select a Course First");
                 }
+
             }
         });
 
@@ -333,8 +328,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         });
 
         //Empty Attendance Record
-        emptyAttendanceRecord = new JLabel("<html>No Records Found. Please select a course to display or " +
-                "click SHOW ALL to display all <br> of the courses you have taken before.</html>");
+        emptyAttendanceRecord = new JLabel();
         emptyAttendanceRecord.setBounds(70, 100, 300, 150);
         emptyAttendanceRecord.setFont(new Font("Default", Font.PLAIN, 14));
         p_attend.add(emptyAttendanceRecord);
@@ -357,23 +351,14 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         edit_attendance.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //If Edit Attendance is called
-                confirmA.setEnabled(true);
-                cancelA.setEnabled(true);
-                confirmA.setVisible(true);
-                cancelA.setVisible(true);
-
                 if(isCourseAttendanceSelected) {
                     //calling the search gui with modify attendance mode
                     SearchGUI SI = new SearchGUI(AttCourse, userN, "AT");
+                    dispose();
                 }
                 else{
                     emptyAttendanceRecord.setText("Please Select a Course First");
                 }
-
-
-
-
             }
         });
 
@@ -393,6 +378,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         courseOptionsAttendance.setBounds(235, 30, 160, 40);
         p_attend.add(courseOptionsAttendance);
         refreshA = new JButton(refreshIcon);
+        refreshA.setVisible(false);
         refreshA.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -514,8 +500,20 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         b_logoff.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Gui GI = new Gui();
-                dispose();
+
+                int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
+                if(output == JOptionPane.YES_OPTION)
+                {
+                    Gui GI = new Gui();
+                    dispose();
+                    JOptionPane.showMessageDialog(null , "Return to Login Screen!");
+                }
+                else {
+                    Teacher t = new Teacher();
+                    t.DisplayUserGUI(userN);
+                    dispose();
+                }
+
             }
         });
 
@@ -682,9 +680,9 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
             }
         }
 
-
         @Override
         public void windowClosed(WindowEvent e) {
+            /*
             int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
             if(output == JOptionPane.YES_OPTION)
             {
@@ -693,7 +691,11 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
             else{
                 Teacher t = new Teacher();
                 t.DisplayUserGUI(userN);
+                dispose();
             }
+
+             */
+
         }
         @Override
         public void windowIconified(WindowEvent e) { }

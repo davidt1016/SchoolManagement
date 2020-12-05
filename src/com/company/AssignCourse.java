@@ -3,24 +3,14 @@ package com.company;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.awt.event.*;
-import java.sql.ResultSet;
-import java.util.Vector;
-import java.sql.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.util.Vector;
 
-
-public class EnrollmentGUI extends JFrame{
+public class AssignCourse extends JFrame {
     //Variable Initializations
     Connection con;
     PreparedStatement pst;
@@ -33,31 +23,31 @@ public class EnrollmentGUI extends JFrame{
     private static JButton enroll, cancel;
     private static JTextField courseSearch;
     private static JList resultList;
-    private String userN = " ";
+    private int teacherID = 0;
     private  String selectedCourse;
     private boolean isAddCourse;
     private int SN;
 
     //Setter and getter for userName
     //Setter for UserName
-    public void setusrN ( String userName )
+    public void setTeacherID( int usrID )
     {
-        this.userN = userName;
+        this.teacherID = usrID;
     }
     //Getter for username
-    public String getusrN()
+    public int getTeacherID()
     {
-        return userN;
+        return teacherID;
     }
-
-
-    //Constructor
-    EnrollmentGUI(String userName, int SNumber)
+    AssignCourse( int TeacherID)
     {
-        SN = SNumber;
-        userN = userName;
+
+        teacherID = TeacherID;
         frame = getContentPane();
-        setTitle("Course Enrollment");
+        setTitle("Assigning Course");
+
+
+
 
         panel = new JPanel();
         panel.setLayout(null);
@@ -69,8 +59,8 @@ public class EnrollmentGUI extends JFrame{
         backgroundPanel.setBackground(Color.LIGHT_GRAY);
 
         //Title for enrollment
-        title = new JLabel("<html><u>COURSE ENROLLMENT</html>");
-        title.setBounds(135, 5, 200, 20);
+        title = new JLabel("<html><u>Assign Course to Instructor</html>");
+        title.setBounds(120, 5, 300, 30);
         title.setFont(new Font("Default", Font.BOLD, 16));
         panel.add(title);
 
@@ -79,7 +69,7 @@ public class EnrollmentGUI extends JFrame{
 
 
         //Enroll Buttons
-        enroll = new JButton("ENROLL");
+        enroll = new JButton("ASSIGN");
         enroll.setBounds(150, 400, 300, 40);
 
         // panel.addKeyListener(keyPressed(KeyEvent));
@@ -198,26 +188,8 @@ public class EnrollmentGUI extends JFrame{
         enroll.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    pst2 = con.prepareStatement("insert into Takes(Student_ID, Course_ID, Attendance, Grade)values(?,?,null,null)");
-                    pst2.setString(1, Integer.toString(SN) );
-                    pst2.setString(2, selectedCourse.split(":")[0]);
-                    //Execute the update on the database
-                    pst2.executeUpdate();
-                    isAddCourse = true;
-                    Student s = new Student();
-                    s.DisplayUserGUI(userN);
-                    dispose();
-
-                }catch (SQLIntegrityConstraintViolationException e_SQLIntegrityConstraintViolationException){
-                    //failure to add acount
-                    isAddCourse = false;
-                    confirmEnrollmentL.setText("Course Already Taken!");
-                    //displaying error
-                    //catching other SQL errors
-                }catch (SQLException other_SQLException){
-                    other_SQLException.printStackTrace();
-                }
+                //---------------------Connection for database-----------------
+                //Assigning instructors to courses
 
             }
         });
@@ -233,8 +205,8 @@ public class EnrollmentGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if ( e.getSource() == cancel )
                 {
-                    Student s = new Student();
-                    s.DisplayUserGUI(userN);
+                    Admin t = new Admin();
+                    t.DisplayUserGUI("Admin");
                     dispose();
                 }
 
@@ -262,14 +234,17 @@ public class EnrollmentGUI extends JFrame{
             //For sure for closing and exiting the program
             if(output == JOptionPane.YES_OPTION)
             {
-                JOptionPane.showMessageDialog(null , "Return to Student Interface");
+                JOptionPane.showMessageDialog(null , "Return to Admin Interface");
+                Admin t = new Admin();
+                t.DisplayUserGUI("Admin");
+                dispose();
 
             }
             else
             {
                 //Display the Enrollment Interface
-                EnrollmentGUI EGUI = new EnrollmentGUI(userN, SN);
-
+                AssignCourse aC = new AssignCourse(teacherID);
+                dispose();
             }
         }
         @Override
@@ -286,5 +261,6 @@ public class EnrollmentGUI extends JFrame{
         public void windowActivated(WindowEvent e) { }
         @Override
         public void windowDeactivated(WindowEvent e) { }
+
     }
 }
