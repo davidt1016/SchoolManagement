@@ -461,7 +461,7 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
             @Override
             public void actionPerformed(ActionEvent e) {
                 Admin a = new Admin();
-                a.DisplayUserGUI("root"); //need to determine the admin username
+                a.DisplayUserGUI("Admin"); //need to determine the admin username
                 dispose();
 
             }
