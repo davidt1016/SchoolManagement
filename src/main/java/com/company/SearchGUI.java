@@ -371,7 +371,9 @@ public class SearchGUI extends JFrame{
 
         //Enroll Buttons
         select = new JButton("Confirm");
-        select.setBounds(150, 400, 300, 40);
+        select.setBounds(45, 400, 150, 40);
+        select.setBackground(new Color (25,100,205));
+        select.setForeground(Color.white);
         select.addActionListener(new ActionListener() {
             //updating student data with entered values
             @Override
@@ -440,7 +442,9 @@ public class SearchGUI extends JFrame{
 
         //Cancel
         cancel = new JButton("Cancel");
-        cancel.setBounds(0, 400, 150, 40);
+        cancel.setBounds(260, 400, 150, 40);
+        cancel.setBackground(new Color (25,100,205));
+        cancel.setForeground(Color.white);
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

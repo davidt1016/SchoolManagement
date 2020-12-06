@@ -72,7 +72,7 @@ public class EnrollmentGUI extends JFrame{
 
         panel = new JPanel();
         panel.setLayout(null);
-        panel.setBounds(25, 15, 450, 450);
+        panel.setBounds(20, 15, 450, 450);
         panel.setBackground(Color.white);
         backgroundPanel = new JPanel();
         backgroundPanel.setLayout(null);
@@ -91,7 +91,9 @@ public class EnrollmentGUI extends JFrame{
 
         //Enroll Buttons
         enroll = new JButton("ENROLL");
-        enroll.setBounds(150, 400, 300, 40);
+        enroll.setBounds(45, 400, 150, 40);
+        enroll.setBackground(new Color (25,100,205));
+        enroll.setForeground(Color.white);
 
         // panel.addKeyListener(keyPressed(KeyEvent));
 
@@ -238,7 +240,9 @@ public class EnrollmentGUI extends JFrame{
         panel.add(SearchPromptL);
         //Cancel
         cancel = new JButton("Cancel");
-        cancel.setBounds(0, 400, 150, 40);
+        cancel.setBounds(260, 400, 150, 40);
+        cancel.setBackground(new Color (25,100,205));
+        cancel.setForeground(Color.white);
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

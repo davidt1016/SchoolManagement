@@ -251,7 +251,9 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
         //-------------Buttons for cancel, update-----------
         //Update Button
         update = new JButton("Update");
-        update.setBounds( 370, 180, 100, 40 );
+        update.setBounds( 15, 180, 100, 40 );
+        update.setBackground(new Color (25,100,205));
+        update.setForeground(Color.white);
         update.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -471,7 +473,9 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
         editInfo.add(update);
         //Cancel Button
         cancel = new JButton("Cancel");
-        cancel.setBounds(15, 180, 100, 40);
+        cancel.setBounds( 370, 180, 100, 40 );
+        cancel.setBackground(new Color (25,100,205));
+        cancel.setForeground(Color.white);
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

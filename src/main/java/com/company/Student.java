@@ -481,6 +481,8 @@ public class Student extends JFrame implements UserInterfaceGUI {
         //For Enrol button
         enrol = new JButton("ENROLL");
         enrol.setBounds(250, 250, 100, 40);
+        enrol.setBackground(new Color (25,100,205));
+        enrol.setForeground(Color.white);
         enrol.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -598,7 +600,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
         //For overall GPA button
         overallG = new JButton("Overall GPA");
-        overallG.setBounds( 70, 250, 100, 40);
+        overallG.setBounds( 65, 250, 120, 40);
+        overallG.setBackground(new Color (25,100,205));
+        overallG.setForeground(Color.white);
         overallG.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

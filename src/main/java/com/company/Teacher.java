@@ -198,6 +198,8 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         //For Edit Grade button
         edit_grade = new JButton("Edit Grade");
         edit_grade.setBounds(160, 270, 100, 40);
+        edit_grade.setBackground(new Color (25,100,205));
+        edit_grade.setForeground(Color.white);
         confirmG = new JButton("Confirm");
         confirmG.setBounds(120,225,80,40);
         cancelG = new JButton("Cancel");
@@ -336,6 +338,8 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
         //For Edit Attendance button
         edit_attendance = new JButton("Edit Attendance");
         edit_attendance.setBounds(160, 270, 130, 40);
+        edit_attendance.setBackground(new Color (25,100,205));
+        edit_attendance.setForeground(Color.white);
         confirmA = new JButton("Confirm");
         confirmA.setBounds(130,225,80,40);
         cancelA = new JButton("Cancel");

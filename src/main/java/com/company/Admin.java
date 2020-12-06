@@ -84,9 +84,8 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //title of the interface
         title = new JLabel("<html><u>Welcome, Administrator!</html>");
         title.setFont(new Font("Default", Font.BOLD, 18));
-        title.setBounds(150, 5, 300, 30);
+        title.setBounds(175, 5, 300, 30);
         accountPanel.add(title);
-
 
 
         //For changing password for admin account
@@ -132,12 +131,11 @@ public class Admin extends JFrame implements UserInterfaceGUI {
 
 
 
-
-
-
         //Button for updating the password
         updatePass = new JButton("Update Password");
-        updatePass.setBounds(10, 10, 115, 20);
+        updatePass.setBounds(10, 5, 135, 25);
+        updatePass.setBackground(new Color (25,100,205));
+        updatePass.setForeground(Color.white);
         updatePass.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -167,7 +165,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         accountPanel.add(errorPass);
         //Cancel operation for updating password
         cancelPass = new JButton("Cancel");
-        cancelPass.setBounds(270, 60, 100, 70);
+        cancelPass.setBounds(420, 70, 80, 50);
+        cancelPass.setBackground(new Color (25,100,205));
+        cancelPass.setForeground(Color.white);
         cancelPass.setEnabled(false);
         cancelPass.setVisible(false);
         cancelPass.addActionListener(new ActionListener() {
@@ -184,7 +184,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         accountPanel.add(cancelPass);
 
         changePass = new JButton("<html><div style='text-align: center;'>Change Admin <br> Password</div></html>");
-        changePass.setBounds(370, 60, 150, 70);
+        changePass.setBounds(290, 70, 110, 50);
+        changePass.setBackground(new Color (25,100,205));
+        changePass.setForeground(Color.white);
         changePass.setEnabled(false);
         changePass.setVisible(false);
         changePass.addActionListener(new ActionListener() {
@@ -270,7 +272,9 @@ public class Admin extends JFrame implements UserInterfaceGUI {
 
         //Initially act as a log off button
         logoffNCancel = new JButton( "Log Off");
-        logoffNCancel.setBounds( 420, 10, 100, 30);
+        logoffNCancel.setBounds( 410, 10, 100, 30);
+        logoffNCancel.setBackground(new Color (250,5,5));
+        logoffNCancel.setForeground(Color.white);
 
         logoffNCancel.addActionListener(new ActionListener() {
             @Override
@@ -326,6 +330,8 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Edit Button
         editInfo = new JButton("<html><div style='text-align: center;'>Edit<br> Information</div></html>");
         editInfo.setBounds( 100, 190, 110, 70);
+        editInfo.setBackground(new Color (25,100,205));
+        editInfo.setForeground(Color.white);
         editInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -344,6 +350,8 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Edit course button
         editCourse = new JButton("<html><div style='text-align: center;'>Edit<br>Course</div></html>");
         editCourse.setBounds(310, 190, 110, 70);
+        editCourse.setBackground(new Color (25,100,205));
+        editCourse.setForeground(Color.white);
         editCourse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
