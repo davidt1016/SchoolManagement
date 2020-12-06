@@ -357,7 +357,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             public void actionPerformed(ActionEvent e) {
                 //-------------Data Connection Needed Here for Assigning courses for Teacher------------
                 //------------need to retrieve usr input name and the corresponding teacherID
-                //AssignCourse aCourse = new AssignCourse(teacherID);
+                AssignCourse aCourse = new AssignCourse(1);
                 dispose();
             }
         });
@@ -365,6 +365,8 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         //Edit Records-overlapping for now
         editRecords = new JButton("<html><div style='text-align: center;'>Edit<br>Performance</div></html>");
         editRecords.setBounds(310, 190, 110, 70);
+        editRecords.setBackground(new Color (25,100,205));
+        editRecords.setForeground(Color.white);
         editRecords.addActionListener(
                 new ActionListener() {
                     @Override
