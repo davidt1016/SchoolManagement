@@ -25,11 +25,12 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private static JComboBox courseOptionsAttendance;
 
     //For Account Panel
-    private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype,l_newpass,l_confirmpass,errorPass;
-    private static JPasswordField newpass,confirmpass;
+    private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype, l_currentpass, l_newpass,l_confirmpass,errorPass;
+    private static JPasswordField currentpass, newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     protected String newPassWord;
+
     //For Grade interface
     private static JLabel  CourseGrade, emptyRecord, grade, overallGPA;
     private static JButton overallG, refreshG, enrol;
@@ -53,6 +54,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private String SID;
     private String Name;
     private String DOB;
+    private String currPass;
 
     private String Courses;
     private String CoursesID;
@@ -182,19 +184,22 @@ public class Student extends JFrame implements UserInterfaceGUI {
         l_dob.setBounds(50,155,250,30);
         l_usertype=new JLabel("User Type: "); // "User Type:
         l_usertype.setBounds(50,195,150,30);
+        l_currentpass = new JLabel("");
+        l_currentpass.setBounds(330,65,150, 30);
         l_newpass = new JLabel("");
-        l_newpass.setBounds(350,85,150, 30);
+        l_newpass.setBounds(350,105,150, 30);
         l_confirmpass = new JLabel("");
-        l_confirmpass.setBounds(330,125,150, 30);
+        l_confirmpass.setBounds(330,145,150, 30);
         errorPass = new JLabel("");
         errorPass.setFont(new Font("Default", Font.BOLD, 14));
-        errorPass.setBounds(300,195,315, 30);
+        errorPass.setBounds(300,215,315, 30);
         pa.add(l_atitle);
         pa.add(l_id);
         pa.add(l_name);
         pa.add(l_username);
         pa.add(l_dob);
         pa.add(l_usertype);
+        pa.add(l_currentpass);
         pa.add(l_newpass);
         pa.add(l_confirmpass);
         pa.add(errorPass);
@@ -206,9 +211,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
         l_usertype.setText(l_usertype.getText()+" Student");
 
         newpass = new JPasswordField();
-        newpass.setBounds(460,90,150, 30);
+        newpass.setBounds(460,110,150, 30);
         confirmpass = new JPasswordField();
-        confirmpass.setBounds(460,130,150, 30);
+        confirmpass.setBounds(460,150,150, 30);
         newpass.setEditable(false);
         confirmpass.setEditable(false);
         newpass.setBorder(new LineBorder(Color.white));
@@ -217,26 +222,34 @@ public class Student extends JFrame implements UserInterfaceGUI {
         confirmpass.setBackground(Color.white);
         pa.add(newpass);
         pa.add(confirmpass);
+
+        currentpass = new JPasswordField();
+        currentpass.setBounds(460,70,150, 30);
+        currentpass.setEditable(false);
+        currentpass.setBorder(new LineBorder(Color.white));
+        currentpass.setBackground(Color.white);
+        pa.add(currentpass);
+
         this.addWindowListener(new WL());
 
         b_logoff=new JButton("Log Off");
-        b_logoff.setBounds(480,4,80, 30);
+        b_logoff.setBounds(480,2,80, 30);
         b_logoff.setBackground(new Color (250,5,5));
         b_logoff.setForeground(Color.white);
         b_updatepass=new JButton("Update Password");
-        b_updatepass.setBounds(400,45,140, 30);
+        b_updatepass.setBounds(400,37,140, 30);
         b_updatepass.setBackground(new Color (25,100,205));
         b_updatepass.setForeground(Color.white);
         b_confirm = new JButton("Confirm");
-        b_confirm.setBounds(435,165,80, 30);
+        b_confirm.setBounds(435,185,80, 30);
         b_confirm.setBackground(new Color (25,100,205));
-        //b_confirm.setForeground(Color.white);
+        b_confirm.setForeground(Color.white);
         b_confirm.setEnabled(false);
         b_confirm.setVisible(false);
         b_cancel = new JButton("Cancel");
-        b_cancel.setBounds(535,165,80, 30);
+        b_cancel.setBounds(535,185,80, 30);
         b_cancel.setBackground(new Color (25,100,205));
-        //b_cancel.setForeground(Color.white);
+        b_cancel.setForeground(Color.white);
         b_cancel.setEnabled(false);
         b_cancel.setVisible(false);
         pa.add(b_logoff);
@@ -247,18 +260,31 @@ public class Student extends JFrame implements UserInterfaceGUI {
         b_logoff.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Gui GI = new Gui();
-                dispose();
+                int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
+                if(output == JOptionPane.YES_OPTION)
+                {
+                    Gui GI = new Gui();
+                    dispose();
+                    JOptionPane.showMessageDialog(null , "Return to Login Screen!");
+                }
+                else {
+                    Student s = new Student();
+                    s.DisplayUserGUI(usrN);
+                    dispose();
+                }
             }
         });
 
         b_updatepass.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                l_currentpass.setText("Current Password: ");
                 l_newpass.setText("New Password: ");
                 l_confirmpass.setText("Confirmed Password: ");
+                currentpass.setEditable(true);
                 newpass.setEditable(true);
                 confirmpass.setEditable(true);
+                currentpass.setBorder(new LineBorder(Color.black));
                 newpass.setBorder(new LineBorder(Color.black));
                 confirmpass.setBorder(new LineBorder(Color.black));
                 b_confirm.setEnabled(true);
@@ -272,24 +298,66 @@ public class Student extends JFrame implements UserInterfaceGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Validating the length of the password has to be at least 6 characters
-                if ( newpass.getText().length() >= 6 && confirmpass.getText().length() >= 6)
+                if ( currentpass.getText().length() >= 6 && newpass.getText().length() >= 6 && confirmpass.getText().length() >= 6)
                 {
-                    //Checking if password matches or not
-                    //Password and confirmed Password match
+                    //Checking if passwords match or not
                     //Password and confirmed Password match
                     if (Arrays.equals(newpass.getPassword(), confirmpass.getPassword()))
                     {
+                        //fetching old password from database
+                        try{
+                            st = con.createStatement();
+                            //fetching username
+                            PreparedStatement statement = con.prepareStatement("SELECT password FROM SMSSytem.Users where username = ?;");
+                            statement.setString(1, usrN);
+                            ResultSet rs = statement.executeQuery();
+
+                            while (rs.next()) {
+                                currPass = rs.getString("password");
+                            }
+                        }catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+
+                        //comparing old password with the entered one and updating it if they match
+                        String currentpassS = new String(currentpass.getPassword());
+                        String newpassS = new String(newpass.getPassword());
+                        System.out.print(currentpassS+"               ;");
+                        System.out.print(currPass+"               ;");
+                        //updating password in database
+                        if(currentpassS.equals(currPass)){
+                            try{
+                                pst = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
+                                pst.setString(2, usrN );
+                                pst.setString(1, newpassS);
+                                pst.executeUpdate();
+                                JOptionPane.showMessageDialog(f, "Update Password Successfully!");
+                            }catch (SQLException other_SQLException){
+                                other_SQLException.printStackTrace();
+                            }
+
+                        }
+                        else{
+                            System.out.print("Current Password Doesn't Match Our Records ");
+                            JOptionPane.showMessageDialog(f, "Wrong Password Entered!");
+                        }
+
+
                         newPassWord = newpass.getText();
                         errorPass.setText(" ");
-                        JOptionPane.showMessageDialog(f, "Update Password Successfully!");
+                        l_currentpass.setText("");
                         l_newpass.setText("");
                         l_confirmpass.setText("");
+                        currentpass.setText(null);
                         newpass.setText(null);
                         confirmpass.setText(null);
+                        currentpass.setEditable(false);
                         newpass.setEditable(false);
                         confirmpass.setEditable(false);
+                        currentpass.setBorder(new LineBorder(Color.white));
                         newpass.setBorder(new LineBorder(Color.white));
                         confirmpass.setBorder(new LineBorder(Color.white));
+                        currentpass.setBackground(Color.white);
                         newpass.setBackground(Color.white);
                         confirmpass.setBackground(Color.white);
                         b_confirm.setEnabled(false);
@@ -301,6 +369,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     else
                     {
                         //Error occur with the confirmed password and the password doesnt match
+                        currentpass.setText(null);
                         newpass.setText(null);
                         confirmpass.setText(null);
                         errorPass.setText("<html><font color='Red'>Passwords Do Not Match. Please Try Again! </font></html>");
@@ -308,6 +377,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 }
                 else{
                     //Error occur with the confirmed password and the password doesnt match
+                    currentpass.setText(null);
                     newpass.setText(null);
                     confirmpass.setText(null);
                     errorPass.setText("<html><font color='Red'>Password should be at least 6 characters! </font></html>");
@@ -319,14 +389,19 @@ public class Student extends JFrame implements UserInterfaceGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 errorPass.setText(" ");
+                l_currentpass.setText("");
                 l_newpass.setText("");
                 l_confirmpass.setText("");
+                currentpass.setText(null);
                 newpass.setText(null);
                 confirmpass.setText(null);
+                currentpass.setEditable(false);
                 newpass.setEditable(false);
                 confirmpass.setEditable(false);
+                currentpass.setBorder(new LineBorder(Color.white));
                 newpass.setBorder(new LineBorder(Color.white));
                 confirmpass.setBorder(new LineBorder(Color.white));
+                currentpass.setBackground(Color.white);
                 newpass.setBackground(Color.white);
                 confirmpass.setBackground(Color.white);
                 b_confirm.setEnabled(false);
@@ -414,6 +489,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 {
                     //Display Enrol GUI
                     EnrollmentGUI eGUI = new  EnrollmentGUI(usrN, Integer.parseInt(SID));
+                    dispose();
                 }
             }
         });
@@ -750,10 +826,12 @@ public class Student extends JFrame implements UserInterfaceGUI {
             else{
                 Student SI = new Student();
                 SI.DisplayUserGUI(usrN);
+                dispose();
             }
         }
         @Override
         public void windowClosed(WindowEvent e) {
+            /*
             int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
             if(output == JOptionPane.YES_OPTION)
             {
@@ -763,6 +841,8 @@ public class Student extends JFrame implements UserInterfaceGUI {
                 Student SI = new Student();
                 SI.DisplayUserGUI(usrN);
             }
+
+             */
         }
         @Override
         public void windowIconified(WindowEvent e) { }

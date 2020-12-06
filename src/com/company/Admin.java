@@ -278,8 +278,18 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                 //if log off button is pressed, return to Login Screen
                 if ( e.getSource() == logoffNCancel )
                 {
-                    Gui login = new Gui();
-                    dispose();
+                    int output = JOptionPane.showConfirmDialog(frame , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
+                    if(output == JOptionPane.YES_OPTION)
+                    {
+                        Gui GI = new Gui();
+                        dispose();
+                        JOptionPane.showMessageDialog(null , "Return to Login Screen!");
+                    }
+                    else {
+                        Admin AD = new Admin();
+                        AD.DisplayUserGUI(userN);
+                        dispose();
+                    }
                 }
             }
         });

@@ -261,9 +261,10 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                 isEnteredName = false;
                 isEnteredPass = false;
                 isEnteredDate = false;
-                name = null;
+                name = "";
                 password = null;
                 date = null;
+                int validCountString = 0;
                 String UpdateList = " ";
                 //If usrName is empty->user do not want to update the name
                 if (inputNewName.getText().equals(""))
@@ -273,11 +274,24 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                 }
                 //Update the username
                 else
-                {   //Valid input for name and user wants to update name
-                    if(isString(inputNewName.getText()))
+                {
+                    //Splitting the inputName
+                    String newInputName = inputNewName.getText();
+                    String []splitname = newInputName.split("\\s+");
+
+                    //Validating all the input name is String only
+                    for ( int i = 0; i < splitname.length; i++ )
+                    {
+                        if (isString(splitname[i]))
+                        {
+                            validCountString ++;
+                            name = name + splitname[i] + " ";
+                        }
+                    }
+                    //Valid input for name and user wants to update name
+                    if(validCountString== splitname.length)
                     {
                         isEnteredName = true;
-                        name = inputNewName.getText();
                         errorName.setVisible(false);
                         UpdateList = UpdateList + "Name is Updated!" + "<br/>" ;
                     }
@@ -286,6 +300,7 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                         //Error when there is any character that is not string/alphabet
                         errorName.setVisible(true);
                         inputNewName.setText(null);
+                        name = null;
                     }
                 }
                 //User do not want to update the password
@@ -365,7 +380,7 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
                             if(date == null){
                                 date = DOB;
                             }
-                            pst.setString(1, name);
+                            pst.setString(1, name); //add all the resulting input string to "name" variable
                             pst.setString(2, date);
                             pst.setString(3, usrN);
                             //Execute the update on the database
@@ -497,16 +512,7 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
         }
         @Override
         public void windowClosed(WindowEvent e) {
-            int output = JOptionPane.showConfirmDialog(f , "Are you Sure?? ", null , JOptionPane.YES_OPTION);
-            if(output == JOptionPane.YES_OPTION)
-            {
-                JOptionPane.showMessageDialog(null , "Return to Admin Interface!");
-            }
-            else{
-                EditUser eU = new EditUser();
-                eU.DisplayUserGUI(usrN);
-                dispose();
-            }
+
         }
         @Override
         public void windowIconified(WindowEvent e) { }
