@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.ResultSet;
 import java.sql.*;
 
@@ -170,6 +172,8 @@ public class Gui extends JFrame{
             }
         });
 
+        this.addWindowListener(new WL());
+
         //1100 width and 700 height
         //f.setSize(1100,700);
         setSize(1100,700);
@@ -184,11 +188,42 @@ public class Gui extends JFrame{
 
         //Let JFrame to close properly
         //f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Make the frame visible
         //f.setVisible(true);
         setVisible(true);
     }
+
+    //For Showing Messages after the Window has been disposed
+    class WL implements WindowListener
+    {
+        @Override
+        public void windowOpened(WindowEvent e) { }
+        @Override
+        public void windowClosing(WindowEvent e) {
+            int output = JOptionPane.showConfirmDialog(f , "Are you Sure ? ", null , JOptionPane.YES_OPTION);
+            if(output == JOptionPane.YES_OPTION)
+            {
+                System.exit(1);
+            }
+            else{
+                Gui g = new Gui();
+                dispose();
+            }
+        }
+
+        @Override
+        public void windowClosed(WindowEvent e) { }
+        @Override
+        public void windowIconified(WindowEvent e) { }
+        @Override
+        public void windowDeiconified(WindowEvent e) { }
+        @Override
+        public void windowActivated(WindowEvent e) { }
+        @Override
+        public void windowDeactivated(WindowEvent e) { }
+    }
+
 }
 

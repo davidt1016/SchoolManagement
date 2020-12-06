@@ -676,6 +676,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
             else{
                 Teacher t = new Teacher();
                 t.DisplayUserGUI(userN);
+                dispose();
 
             }
         }

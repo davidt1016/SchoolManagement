@@ -549,6 +549,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             else{
                 Admin administrator = new Admin();
                 administrator.DisplayUserGUI(userN);
+                dispose();
 
             }
         }
