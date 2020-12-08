@@ -57,6 +57,7 @@ public class SearchGUI extends JFrame{
     private String userN;
     private String CourseN = " ";
     private String mode;
+    private String foundName = "";
 
     private  String selectedName;
 
@@ -166,11 +167,10 @@ public class SearchGUI extends JFrame{
             title.setText("<html><u>Edit"+" "+userN+" Performance Records</html>");
             title.setBounds(80, 5, 420, 60);
             l_search.setText(null);
-            tf_search.setEditable(false);
-            tf_search.setBorder(null);
+            tf_search.setEditable(true);
             selectCourse.setText("Course Search: ");
-            inputCourse.setVisible(true);
-            inputCourse.setEditable(true);
+            inputCourse.setEditable(false);
+            inputCourse.setVisible(false);
 
         }
         //teacher interfaces
@@ -258,32 +258,64 @@ public class SearchGUI extends JFrame{
                 if(tf_search.getText().length()>0) {
                     resultData.clear();
 
-                    //fetching data from database that matches entered Name and displaying results in a JList
-                    try {
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
-                        st = con.createStatement();
-                        PreparedStatement statement = con.prepareStatement("SELECT S.userName, S.Name FROM SMSSytem.Takes T, SMSSytem.Student S where T.Student_ID = S.Student_ID and T.Course_ID = ? and S.Name like ?");
-                        String enteredName = tf_search.getText();
-                        statement.setString(1, CourseN);
-                        statement.setString(2, "%" + enteredName.trim() + "%");
-                        ResultSet rs = statement.executeQuery();
-                        //System.out.print(enteredName + " ");
-                        resultData.clear();
-                        resultList.updateUI();
-                        while (rs.next()) {
-                            String foundName = "<html>" + rs.getString("Name") + ",&nbsp;&nbsp;&nbsp;&nbsp;" + "@" + "<i>" + rs.getString("userName") + "</i>" + "</html>";
-                            confirmSelectionL.setVisible(false);
-                            resultList.setVisible(true);
-                            resultData.add(foundName);
+                    if(mode == "GR" || mode == "AT") {
+                        //fetching data from database that matches entered Name and displaying results in a JList
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            st = con.createStatement();
+                            PreparedStatement statement = con.prepareStatement("SELECT S.userName, S.Name FROM SMSSytem.Takes T, SMSSytem.Student S where T.Student_ID = S.Student_ID and T.Course_ID = ? and S.Name like ?");
+                            String enteredName = tf_search.getText();
+                            statement.setString(1, CourseN);
+                            statement.setString(2, "%" + enteredName.trim() + "%");
+                            ResultSet rs = statement.executeQuery();
+                            //System.out.print(enteredName + " ");
+                            resultData.clear();
                             resultList.updateUI();
-                        }
+                            while (rs.next()) {
+                                String foundName = "<html>" + rs.getString("Name") + ",&nbsp;&nbsp;&nbsp;&nbsp;" + "@" + "<i>" + rs.getString("userName") + "</i>" + "</html>";
+                                confirmSelectionL.setVisible(false);
+                                resultList.setVisible(true);
+                                resultData.add(foundName);
+                                resultList.updateUI();
+                            }
 
-                    }catch (ClassNotFoundException classNotFoundException ) {
-                        classNotFoundException.printStackTrace();
-                    }catch (SQLException other_SQLException) {
-                        other_SQLException.printStackTrace();
+                        } catch (ClassNotFoundException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
                     }
+
+                    else if(mode == "BOTH") {
+                        //fetching data from database that matches entered Name and displaying results in a JList
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                            st = con.createStatement();
+                            PreparedStatement statement = con.prepareStatement("SELECT C.Course_ID, T.Grade, T.Attendance, C.Course_Name FROM SMSSytem.Takes T, SMSSytem.Course C, SMSSytem.Student S where T.Student_ID = S.Student_ID and T.Course_ID = C.Course_ID and S.userName = ? and T.Course_ID like ?");
+                            String enteredName = tf_search.getText();
+                            statement.setString(1, userN);
+                            statement.setString(2, "%" + enteredName.trim() + "%");
+                            ResultSet rs = statement.executeQuery();
+                            //System.out.print(enteredName + " ");
+                            resultData.clear();
+                            resultList.updateUI();
+                            while (rs.next()) {
+                                foundName = "<html>" + rs.getString("Course_ID") + ",&nbsp;&nbsp;&nbsp;&nbsp;" + "@" + "<i>" + rs.getString("Course_Name") + "</i>" + "</html>";
+                                confirmSelectionL.setVisible(false);
+                                resultList.setVisible(true);
+                                resultData.add(foundName);
+                                resultList.updateUI();
+                            }
+
+                        } catch (ClassNotFoundException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }
+                    }
+
                 }
                 //disabling and clearing search results if search box is empty
                 else if(tf_search.getText().length()==0){
@@ -329,9 +361,21 @@ public class SearchGUI extends JFrame{
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     resultList.setVisible(false);
                     confirmSelectionL.setText("<html>" + " Edit and Press Confirm to Save: " + selectedName + "</html>");
-                    selectedName = ((selectedName.split("&nbsp;@")[1]).split("</i>")[0]).split("<i>")[1];
+                    if(mode != "BOTH") {
+                        selectedName = ((selectedName.split("&nbsp;@")[1]).split("</i>")[0]).split("<i>")[1];
+                    }
                     tf_search.grabFocus();
                     confirmSelectionL.setVisible(true);
+
+                    if(mode == "BOTH"){
+                        selectedName = selectedName.split(",")[0].split("<html>")[1];
+                        CourseN = selectedName;
+                        selectedName = userN;
+                        System.out.print("IN BOTH");
+                        System.out.print(selectedName + "\n");
+                        System.out.print(CourseN + "\n");
+                    }
+
                     try{
                         PreparedStatement statement = con.prepareStatement("SELECT T.Student_ID, T.Grade, T.Attendance FROM SMSSytem.Users U natural join SMSSytem.Student S natural join SMSSytem.Takes T where SMSSytem.T.Course_ID = ? and U.userName = ?;");
                         statement.setString(1, CourseN);
@@ -340,6 +384,8 @@ public class SearchGUI extends JFrame{
                         //Getting data out from the query
                         while (rs.next()) {
                             SID = rs.getString("Student_ID");
+                            System.out.print("grade is" + "\n");
+                            System.out.print(rs.getString("Grade") + "\n");
                             tf_gr.setText(rs.getString("Grade"));
                             tf_att.setText(rs.getString("Attendance"));
                         }
@@ -381,7 +427,7 @@ public class SearchGUI extends JFrame{
                 //checking which filed to update based on operating mode (grade or attendance)
 
                 //updating grade
-                if (mode == "GR") {
+                if (mode == "GR" || mode == "BOTH") {
                     //ensuring grade is not left blank
                     if (!tf_gr.getText().isBlank()) {
                         try {
@@ -391,9 +437,16 @@ public class SearchGUI extends JFrame{
                             pst2.setString(3, CourseN);
                             //Execute the update on the database
                             pst2.executeUpdate();
-                            Teacher T = new Teacher();
-                            T.DisplayUserGUI(userN);
-                            dispose();
+                            if(mode != "BOTH") {
+                                Teacher T = new Teacher();
+                                T.DisplayUserGUI(userN);
+                                dispose();
+                            }
+                            else{
+                                Admin A = new Admin();
+                                A.DisplayUserGUI("Admin");
+                                dispose();
+                            }
 
                         } catch (SQLException other_SQLException) {
                             other_SQLException.printStackTrace();
@@ -401,7 +454,7 @@ public class SearchGUI extends JFrame{
                     }
                 }
                 //updating attendance
-                else if (mode == "AT") {
+                if (mode == "AT" || mode == "BOTH") {
                     if(!tf_att.getText().isBlank()) {
                         try {
                             pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Attendance = ? where Student_ID = ? and Course_ID = ?;");
@@ -410,31 +463,22 @@ public class SearchGUI extends JFrame{
                             pst2.setString(3, CourseN);
                             //Execute the update on the database
                             pst2.executeUpdate();
-                            Teacher T = new Teacher();
-                            T.DisplayUserGUI(userN);
-                            dispose();
+                            if(mode != "BOTH") {
+                                Teacher T = new Teacher();
+                                T.DisplayUserGUI(userN);
+                                dispose();
+                            }
+                            else{
+                                Admin A = new Admin();
+                                A.DisplayUserGUI("Admin");
+                                dispose();
+                            }
 
                         } catch (SQLException other_SQLException) {
                             other_SQLException.printStackTrace();
                         }
                     }
                 }
-                //For both admin, update both grade and attendance
-                //2020-12-04 update for admin
-                else if (mode == "BOTH")
-                {
-                    //--------------------------Data Connection Needed Here for updating grade---------------------
-                    //ensuring grade is not left blank
-                    if (!tf_gr.getText().isBlank()) {
-
-                    }
-                    //--------------------------Data Connection Needed Here for updating attendance---------------------
-                    //Update attendance if it is not blank
-                    if(!tf_att.getText().isBlank()) {
-
-                    }
-                }
-
             }
         });
         panel.add(select);

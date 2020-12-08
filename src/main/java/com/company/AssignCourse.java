@@ -160,7 +160,7 @@ public class AssignCourse extends JFrame {
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ENTER){
                     resultList.setVisible(false);
-                    confirmEnrollmentL.setText("Enroll in " + selectedCourse + "?");
+                    confirmEnrollmentL.setText("Assign to " + selectedCourse + "?");
                     courseSearch.grabFocus();
                     confirmEnrollmentL.setVisible(true);
                 }
@@ -192,6 +192,19 @@ public class AssignCourse extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //---------------------Connection for database-----------------
                 //Assigning instructors to courses
+                try{
+                    pst2 = con.prepareStatement("UPDATE SMSSytem.Course SET Teacher_ID = ? where Course_ID = ?");
+                    pst2.setString(1, Integer.toString(teacherID));
+                    pst2.setString(2, selectedCourse.split(":")[0]);
+                    pst2.executeUpdate();
+                    JOptionPane.showMessageDialog(frame, "Course Assigned Successfully!");
+                    Admin t = new Admin();
+                    t.DisplayUserGUI("Admin");
+                    dispose();
+
+                }catch (SQLException other_SQLException){
+                    other_SQLException.printStackTrace();
+                }
 
             }
         });

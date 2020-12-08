@@ -41,6 +41,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     private String selectedName = "";
     private String selectedType = "";
     private String currPassS;
+    private String foundID = "";
     protected int teacherID =0;
 
     @Override
@@ -357,7 +358,22 @@ public class Admin extends JFrame implements UserInterfaceGUI {
             public void actionPerformed(ActionEvent e) {
                 //-------------Data Connection Needed Here for Assigning courses for Teacher------------
                 //------------need to retrieve usr input name and the corresponding teacherID
-                AssignCourse aCourse = new AssignCourse(1);
+
+                try {
+                    con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
+                    st = con.createStatement();
+                    PreparedStatement statement = con.prepareStatement("SELECT Teacher_ID FROM SMSSytem.Teacher where userName = ?");
+                    statement.setString(1, selectedName);
+                    ResultSet rs = statement.executeQuery();
+                    //System.out.print(enteredName + " ");
+                    while (rs.next()) {
+                        foundID = rs.getString("Teacher_ID");
+                    }
+
+                }catch (SQLException other_SQLException) {
+                    other_SQLException.printStackTrace();
+                }
+                AssignCourse aCourse = new AssignCourse(Integer.parseInt(foundID));
                 dispose();
             }
         });

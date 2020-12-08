@@ -147,7 +147,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
 
         courseEnrolled.add("-------------");
-        courseEnrolled.add("LATEST 8 COURSES");
+        courseEnrolled.add("All COURSES");
 
         setTitle("Student Interface");
         f = getContentPane();
@@ -445,7 +445,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     {
                         isCourseGradeSelected = true;
                         //If Show all is selected->Display all grade
-                        if (coursesOptions.getSelectedItem() == "LATEST 8 COURSES")
+                        if (coursesOptions.getSelectedItem() == "All COURSES")
                         {
                             isSelectedAllGrade = true;
                         }
@@ -675,7 +675,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                     {
                         isCourseAttendanceSelected = true;
                         //All courses have been chosen to display attendance
-                        if(courseOptionsAttendance.getSelectedItem() == "LATEST 8 COURSES")
+                        if(courseOptionsAttendance.getSelectedItem() == "All COURSES")
                         {
                             isSelectedAllAtten = true;
                         }
