@@ -20,8 +20,8 @@ public class AssignCourse extends JFrame {
     Container frame;
     private static JLabel title, confirmEnrollmentL, SearchPromptL;
     private static JPanel panel, backgroundPanel;
-    private static JButton enroll, cancel;
-    private static JTextField courseSearch;
+    public static JButton enroll, cancel;
+    public static JTextField courseSearch;
     private static JList resultList;
     private int teacherID = 0;
     private  String selectedCourse;

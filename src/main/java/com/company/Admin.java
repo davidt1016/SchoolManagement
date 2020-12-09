@@ -28,12 +28,12 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     private static Container frame;
     private ImageIcon icon;
     private static JLabel label, title, searchUsrName, instructions, confirmSelectionL;
-    private static JTextField inputUsrName;
-    private static JButton  editInfo, editRecords, editCourse, logoffNCancel, changePass, cancelPass, updatePass;
+    public static JTextField inputUsrName;
+    public static JButton  editInfo, editRecords, editCourse, logoffNCancel, changePass, cancelPass, updatePass;
     private static JPanel panel, accountPanel, recordPanel;
     //for password interfaces
     private static JLabel PassInst, currPass, newPass, confirmPass, errorPass;
-    private static JPasswordField inputCurr, inputNewPass, inputConfirmPass;
+    public static JPasswordField inputCurr, inputNewPass, inputConfirmPass;
     protected String newPassW = " ";
     private String userN = " ";
     private String inUsrname = " ";

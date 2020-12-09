@@ -23,9 +23,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
     //For Account Panel
     private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype, l_currentpass, l_newpass,l_confirmpass,errorPass;
-    private static JPasswordField currentpass, newpass,confirmpass;
+    public static JPasswordField currentpass, newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
-    private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
+    public static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String newPassWord;
 
     //For Grade interface

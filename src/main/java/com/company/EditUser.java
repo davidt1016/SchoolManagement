@@ -22,9 +22,9 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
     //Title Label for each Panel and instructions
     private JLabel instructEdit, modifyAcc, CurrAccInfo;
     private JLabel errorDate, errorPass, errorName;
-    private JTextField inputNewName, inputNewDOB;
-    private JPasswordField inputNewPass;
-    private JButton update, cancel;
+    public JTextField inputNewName, inputNewDOB;
+    public JPasswordField inputNewPass;
+    public JButton update, cancel;
     private String usrN ="";
     private Boolean isEnteredName = false;
     private Boolean isEnteredPass = false;
