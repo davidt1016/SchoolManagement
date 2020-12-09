@@ -38,7 +38,7 @@ public class AccountGUI extends JFrame {
     //For error messages
     private static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName, errorUserExsists;
     //User Inputs
-    private static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
+    public static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
     //Password Field
     public static JPasswordField pass, confirmedPass;
     //Buttons
