@@ -472,28 +472,7 @@ public class SearchGUI extends JFrame{
                         {
                             errorGrade.setText("<html><font color = 'red'>Error!! Input Grade Out of Range. Please Type in Value between 0 and 100. </font></html>");
                         }
-                        /*
-                        try {
-                            pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ? where Student_ID = ? and Course_ID = ?;");
-                            pst2.setString(1, tf_gr.getText());
-                            pst2.setString(2, SID);
-                            pst2.setString(3, CourseN);
-                            //Execute the update on the database
-                            pst2.executeUpdate();
-                            if(mode != "BOTH") {
-                                Teacher T = new Teacher();
-                                T.DisplayUserGUI(userN);
-                                dispose();
-                            }
-                            else{
-                                Admin A = new Admin();
-                                A.DisplayUserGUI("Admin");
-                                dispose();
-                            }
 
-                        } catch (SQLException other_SQLException) {
-                            other_SQLException.printStackTrace();
-                        }*/
                     }
                 }
                 //updating attendance
@@ -529,28 +508,6 @@ public class SearchGUI extends JFrame{
                         {
                             errorAttendance.setText("<html><font color = 'red'>Error!! Input Attendance Out of Range. Please Type in Value between 0 and 365. </font></html>");
                         }
-                        /*
-                        try {
-                            pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Attendance = ? where Student_ID = ? and Course_ID = ?;");
-                            pst2.setString(1, tf_att.getText());
-                            pst2.setString(2, SID);
-                            pst2.setString(3, CourseN);
-                            //Execute the update on the database
-                            pst2.executeUpdate();
-                            if(mode != "BOTH") {
-                                Teacher T = new Teacher();
-                                T.DisplayUserGUI(userN);
-                                dispose();
-                            }
-                            else{
-                                Admin A = new Admin();
-                                A.DisplayUserGUI("Admin");
-                                dispose();
-                            }
-
-                        } catch (SQLException other_SQLException) {
-                            other_SQLException.printStackTrace();
-                        }*/
                     }
                 }
             }
