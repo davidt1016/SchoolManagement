@@ -34,6 +34,15 @@ public class EnrollmentGUI extends JFrame{
     private static JTextField courseSearch;
     private static JList resultList;
     private String userN = " ";
+
+    public String getSelectedCourse() {
+        return selectedCourse;
+    }
+
+    public void setSelectedCourse(String selectedCourse) {
+        this.selectedCourse = selectedCourse;
+    }
+
     private  String selectedCourse;
     private boolean isAddCourse;
 
