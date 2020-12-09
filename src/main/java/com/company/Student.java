@@ -29,7 +29,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private static JPasswordField currentpass, newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     private static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
-    protected String newPassWord;
+    private String newPassWord;
 
     //For Grade interface
     private static JLabel  CourseGrade, emptyRecord, grade, overallGPA;
@@ -64,7 +64,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private String Course;
     private String CourseID;
     private String Grade;
-    String cGPA_s = "";
+    private String cGPA_s = "";
 
     //Setter and getter for userName
     //Setter for UserName

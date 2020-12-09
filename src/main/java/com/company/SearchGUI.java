@@ -53,9 +53,9 @@ public class SearchGUI extends JFrame{
     private static JTextField tf_search, tf_gr, tf_att, inputCourse;
     private static JPanel panel, backgroundPanel;
     private static JButton select, cancel;
-    protected String usrType = " ";
+    private String usrType = " ";
     private String userN;
-    private String CourseN = " ";
+    private String CourseN;
     private String mode;
     private String foundName = "";
 
@@ -108,6 +108,7 @@ public class SearchGUI extends JFrame{
         return usrType;
     }
     SearchGUI(String CourseName, String username, String chosenMode){
+        CourseN = " ";
         CourseN = CourseName;
         userN = username;
         mode = chosenMode;

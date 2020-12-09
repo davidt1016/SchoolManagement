@@ -1,11 +1,8 @@
 package com.company;
 
-import javax.naming.Name;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,18 +12,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import javax.swing.border.LineBorder;
-import java.awt.*;
 import java.awt.event.*;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 import java.sql.*;
-import javax.swing.*;
-import java.util.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -47,6 +36,15 @@ public class EnrollmentGUI extends JFrame{
     private String userN = " ";
     private  String selectedCourse;
     private boolean isAddCourse;
+
+    public int getSN() {
+        return SN;
+    }
+
+    public void setSN(int SN) {
+        this.SN = SN;
+    }
+
     private int SN;
 
     //Setter and getter for userName

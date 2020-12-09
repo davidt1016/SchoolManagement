@@ -15,9 +15,11 @@ public class AccountGUI extends JFrame {
     Connection con;
     PreparedStatement pst;
     Statement st;
+
+
     //Variables Initialization
-    protected String FirstName, LastName, UsrName, PassWord, Birthdate; //String variables that store user input
-    protected String chosenUsrType = " "; //String variables that store user input
+    private String FirstName, LastName, UsrName, PassWord, Birthdate; //String variables that store user input
+    private String chosenUsrType = " "; //String variables that store user input
     private int newStudentID;
     private int newTeacherID;
     //For JComboBox
@@ -38,9 +40,59 @@ public class AccountGUI extends JFrame {
     //User Inputs
     private static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
     //Password Field
-    private static JPasswordField pass, confirmedPass;
+    public static JPasswordField pass, confirmedPass;
     //Buttons
     private static JButton cancel, create;
+
+    //Getter and Setters for user input info
+    public String getFirstName() {
+        return FirstName;
+    }
+
+    public void setFirstName(String firstName) {
+        FirstName = firstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public void setLastName(String lastName) {
+        LastName = lastName;
+    }
+
+    public String getUsrName() {
+        return UsrName;
+    }
+
+    public void setUsrName(String usrName) {
+        UsrName = usrName;
+    }
+
+    public String getPassWord() {
+        return PassWord;
+    }
+
+    public void setPassWord(String passWord) {
+        PassWord = passWord;
+    }
+
+    public String getBirthdate() {
+        return Birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        Birthdate = birthdate;
+    }
+
+    public String getChosenUsrType() {
+        return chosenUsrType;
+    }
+
+    public void setChosenUsrType(String chosenUsrType) {
+        this.chosenUsrType = chosenUsrType;
+    }
+
     //Check for date format yyyy/mm/dd
     //Code from: https://www.geeksforgeeks.org/java-date-format-validation-using-regex/
     private static boolean isValidDate(String d)
@@ -169,6 +221,7 @@ public class AccountGUI extends JFrame {
                 //Return back to Login Screen
                 //Calling Login Screen GUI
                 Gui GI = new Gui();
+                JOptionPane.showMessageDialog(frame , "Returning to Login Screen...");
                 dispose();
             } });
         cancel.setBounds( 15, 370, 80, 50);
@@ -339,7 +392,7 @@ public class AccountGUI extends JFrame {
                         {
                             isValidBdate = false;
                             InputdateofBirth.setText(null);
-                            errorDate.setText("<html><font color='Red'>Incompatible Date Format. Please Try Again with yyyy/MM/dd </font></html>");
+                            errorDate.setText("<html><font color='Red'>Incompatible Date Format. Please Try Again with (YYYY/DD/MM) </font></html>");
                         }
 
                     }
@@ -461,10 +514,13 @@ public class AccountGUI extends JFrame {
 
                         /////////////////////////////////////////////////
                         if (isCreateAccount == true) {
+                            JOptionPane.showMessageDialog(frame , "User Account Created Successfully!");
                             Gui GI = new Gui();
                             //Closing the windows
                             dispose();
                         }
+
+
                     }
                 }
             }
@@ -538,9 +594,7 @@ public class AccountGUI extends JFrame {
         }
         @Override
         public void windowClosed(WindowEvent e) {
-            //Account Creation (create button is pressed) is successful and close the window with success message prompt
-            if ( isCreateAccount == true)
-                JOptionPane.showMessageDialog(frame , "User Account Created Successfully!");
+
         }
         @Override
         public void windowIconified(WindowEvent e) { }

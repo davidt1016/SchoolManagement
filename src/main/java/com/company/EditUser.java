@@ -30,9 +30,9 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
     private Boolean isEnteredPass = false;
     private Boolean isEnteredDate = false;
     //Storing newly updated information
-    protected String name = null;
-    protected String password =null;
-    protected String date = null;
+    private String name = null;
+    private String password =null;
+    private String date = null;
     private String userType = "";
 
     //Storing old user Info

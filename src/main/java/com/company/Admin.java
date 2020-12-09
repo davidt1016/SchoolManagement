@@ -36,13 +36,13 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     private static JPasswordField inputCurr, inputNewPass, inputConfirmPass;
     protected String newPassW = " ";
     private String userN = " ";
-    protected String inUsrname = " ";
+    private String inUsrname = " ";
 
     private String selectedName = "";
     private String selectedType = "";
     private String currPassS;
     private String foundID = "";
-    protected int teacherID =0;
+    private int teacherID =0;
 
     @Override
     public void setusrN(String userName) {
