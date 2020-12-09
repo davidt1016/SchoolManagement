@@ -31,7 +31,7 @@ public class EnrollmentGUI extends JFrame{
     private static JLabel title, confirmEnrollmentL, SearchPromptL;
     private static JPanel panel, backgroundPanel;
     private static JButton enroll, cancel;
-    private static JTextField courseSearch;
+    public static JTextField courseSearch;
     private static JList resultList;
     private String userN = " ";
 
