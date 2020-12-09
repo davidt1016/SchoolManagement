@@ -41,6 +41,8 @@ import java.util.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import static java.lang.Integer.parseInt;
+
 public class SearchGUI extends JFrame{
     Connection con;
     PreparedStatement pst;
@@ -49,10 +51,10 @@ public class SearchGUI extends JFrame{
 
     //Variable Initializations
     Container f;
-    private static JLabel title,l_search, confirmSelectionL, l_grade, l_attendance, selectCourse;
-    private static JTextField tf_search, tf_gr, tf_att, inputCourse;
+    private static JLabel title,l_search, confirmSelectionL, l_grade, l_attendance, selectCourse, errorAttendance, errorGrade;
+    public static JTextField tf_search, tf_gr, tf_att, inputCourse;
     private static JPanel panel, backgroundPanel;
-    private static JButton select, cancel;
+    public static JButton select, cancel;
     private String usrType = " ";
     private String userN;
     private String CourseN;
@@ -216,6 +218,14 @@ public class SearchGUI extends JFrame{
         tf_att.setBounds(140,300,70,20);
         panel.add(tf_att);
 
+        errorAttendance = new JLabel(" ");
+        errorAttendance.setFont(new Font("Default", Font.BOLD, 12));
+        errorAttendance.setBounds(15,330, 400, 40);
+        panel.add(errorAttendance);
+        errorGrade = new JLabel(" ");
+        errorGrade.setFont(new Font("Default", Font.BOLD, 12));
+        errorGrade.setBounds(15, 360, 400, 40 );
+        panel.add(errorGrade);
 
         //JList to display search results
         resultList = new JList<String>(resultData);
@@ -426,12 +436,16 @@ public class SearchGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //checking which filed to update based on operating mode (grade or attendance)
-
+                errorAttendance.setText(" ");
+                errorGrade.setText(" ");
                 //updating grade
                 if (mode == "GR" || mode == "BOTH") {
                     //ensuring grade is not left blank
                     if (!tf_gr.getText().isBlank()) {
-                        try {
+                        if(Integer.parseInt(tf_gr.getText()) >=0 && Integer.parseInt(tf_gr.getText()) <= 100)
+                        {
+                            errorGrade.setText(" ");
+                            try {
                             pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ? where Student_ID = ? and Course_ID = ?;");
                             pst2.setString(1, tf_gr.getText());
                             pst2.setString(2, SID);
@@ -452,11 +466,70 @@ public class SearchGUI extends JFrame{
                         } catch (SQLException other_SQLException) {
                             other_SQLException.printStackTrace();
                         }
+
+                        }
+                        else
+                        {
+                            errorGrade.setText("<html><font color = 'red'>Error!! Input Grade Out of Range. Please Type in Value between 0 and 100. </font></html>");
+                        }
+                        /*
+                        try {
+                            pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Grade = ? where Student_ID = ? and Course_ID = ?;");
+                            pst2.setString(1, tf_gr.getText());
+                            pst2.setString(2, SID);
+                            pst2.setString(3, CourseN);
+                            //Execute the update on the database
+                            pst2.executeUpdate();
+                            if(mode != "BOTH") {
+                                Teacher T = new Teacher();
+                                T.DisplayUserGUI(userN);
+                                dispose();
+                            }
+                            else{
+                                Admin A = new Admin();
+                                A.DisplayUserGUI("Admin");
+                                dispose();
+                            }
+
+                        } catch (SQLException other_SQLException) {
+                            other_SQLException.printStackTrace();
+                        }*/
                     }
                 }
                 //updating attendance
                 if (mode == "AT" || mode == "BOTH") {
                     if(!tf_att.getText().isBlank()) {
+
+                        if(Integer.parseInt(tf_att.getText()) >= 0 && Integer.parseInt(tf_att.getText()) <= 365 )
+                        {
+                            errorAttendance.setText(" ");
+                            try {
+                                pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Attendance = ? where Student_ID = ? and Course_ID = ?;");
+                                pst2.setString(1, tf_att.getText());
+                                pst2.setString(2, SID);
+                                pst2.setString(3, CourseN);
+                                //Execute the update on the database
+                                pst2.executeUpdate();
+                                if(mode != "BOTH") {
+                                    Teacher T = new Teacher();
+                                    T.DisplayUserGUI(userN);
+                                    dispose();
+                                }
+                                else{
+                                    Admin A = new Admin();
+                                    A.DisplayUserGUI("Admin");
+                                    dispose();
+                                }
+
+                            } catch (SQLException other_SQLException) {
+                                other_SQLException.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            errorAttendance.setText("<html><font color = 'red'>Error!! Input Attendance Out of Range. Please Type in Value between 0 and 365. </font></html>");
+                        }
+                        /*
                         try {
                             pst2 = con.prepareStatement("UPDATE SMSSytem.Takes SET Attendance = ? where Student_ID = ? and Course_ID = ?;");
                             pst2.setString(1, tf_att.getText());
@@ -477,7 +550,7 @@ public class SearchGUI extends JFrame{
 
                         } catch (SQLException other_SQLException) {
                             other_SQLException.printStackTrace();
-                        }
+                        }*/
                     }
                 }
             }

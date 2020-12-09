@@ -25,7 +25,7 @@ public class AccountGUI extends JFrame {
     //For JComboBox
     private Boolean isValidType = false;
     private String[] UserType = {"----------------","Students", "Teachers"};
-    private JComboBox usrT;
+    public JComboBox usrT;
     public Boolean isCreateAccount = false;
 
 
@@ -37,12 +37,13 @@ public class AccountGUI extends JFrame {
     private static JLabel account, instruct, firstName, lastName, usrName, password ,confirmPass, usrType, dateofBirth;
     //For error messages
     private static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName, errorUserExsists;
+
     //User Inputs
     public static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
     //Password Field
     public static JPasswordField pass, confirmedPass;
     //Buttons
-    private static JButton cancel, create;
+    public static JButton cancel, create;
 
     //Getter and Setters for user input info
     public String getFirstName() {
@@ -134,9 +135,11 @@ public class AccountGUI extends JFrame {
         inputLast = new JTextField(100);
         inputLast.setBounds(345, 80, 170, 30);
 
+
         usrName = new JLabel("Username (At least 6 Characters ex: abc123):");
         usrName.setBounds(15, 130, 290, 20);
         inputUsr = new JTextField(150);
+
         inputUsr.setBounds(300,125, 215, 30);
 
         password = new JLabel("Password (At least 6 Characters): ");

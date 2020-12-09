@@ -30,15 +30,15 @@ public class EnrollmentGUI extends JFrame{
     Container frame;
     private static JLabel title, confirmEnrollmentL, SearchPromptL;
     private static JPanel panel, backgroundPanel;
-    private static JButton enroll, cancel;
+    public static JButton enroll, cancel;
     public static JTextField courseSearch;
-    private static JList resultList;
+    public static JList resultList;
     private String userN = " ";
-
+    //return CourseID and CourseName (ex: PE: Physical Education)
     public String getSelectedCourse() {
         return selectedCourse;
     }
-
+    //has to pass in CourseID and CourseName (ex: PE: Physical Education)
     public void setSelectedCourse(String selectedCourse) {
         this.selectedCourse = selectedCourse;
     }
@@ -222,6 +222,7 @@ public class EnrollmentGUI extends JFrame{
                     pst2 = con.prepareStatement("insert into Takes(Student_ID, Course_ID, Attendance, Grade)values(?,?,null,null)");
                     pst2.setString(1, Integer.toString(SN) );
                     pst2.setString(2, selectedCourse.split(":")[0]);
+                   // System.out.println("HERE IS ENROLL:" + selectedCourse.split(":")[0]); //has to pass in CourseID and CourseName
                     //Execute the update on the database
                     pst2.executeUpdate();
                     isAddCourse = true;
