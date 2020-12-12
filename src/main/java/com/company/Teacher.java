@@ -13,32 +13,32 @@ import java.util.Vector;
 
 public class Teacher extends JFrame implements UserInterfaceGUI {
     //setting connection parameters
-    Connection con;
-    PreparedStatement pst2;
-    Statement st;
+    public Connection con;
+    public PreparedStatement pst2;
+    public Statement st;
 
     //Dynamic Array for Storing All the Possible Courses for each Student
     private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
-    private static JComboBox coursesOptions;
-    private static JComboBox courseOptionsAttendance;
+    public static JComboBox coursesOptions;
+    public static JComboBox courseOptionsAttendance;
 
     //For Account Panel
-    private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype,l_currentpass,l_newpass,l_confirmpass,errorPass;
+    public static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype,l_currentpass,l_newpass,l_confirmpass,errorPass;
     public static JPasswordField currentpass,newpass,confirmpass;
     private ImageIcon icon, refreshIcon;
     public static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
     private String PassWord;
 
     //For Grade interface
-    private static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade, refreshGrade;
-    private static JButton enroll_course, refreshG, edit_grade, confirmG, cancelG;
+    public static JLabel gradeTitle, CourseGrade, emptyRecord, course, grade,  rade;
+    public static JButton enroll_course, refreshG, edit_grade, confirmG, cancelG;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
 
     //For Attendance Panel
-    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
-    private static JButton refreshA, edit_attendance, confirmA, cancelA;
+    public static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord, refreshAttendance;
+    public static JButton refreshA, edit_attendance, confirmA, cancelA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
 
@@ -58,6 +58,8 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
     private String AttCourse = " ";
     private String[] AttCourseParts;
     private String[] GrCourseParts;
+
+    public boolean isEnteredPassCorrect;
 
     @Override
     public void setusrN(String userName) {
@@ -573,6 +575,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
                         //updating password in database
                         if(currentpassS.equals(currPass)){
                             try{
+                                isEnteredPassCorrect = true;
                                 pst2 = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
                                 pst2.setString(2, userN );
                                 pst2.setString(1, newpassS);
@@ -584,6 +587,7 @@ public class Teacher extends JFrame implements UserInterfaceGUI {
 
                         }
                         else{
+                            isEnteredPassCorrect = false;
                             System.out.print("Current Password Doesn't Match Our Records ");
                             JOptionPane.showMessageDialog(f, "Wrong Password Entered!");
                         }

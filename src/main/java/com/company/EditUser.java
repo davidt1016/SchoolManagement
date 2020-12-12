@@ -21,7 +21,7 @@ public class EditUser extends JFrame  implements UserInterfaceGUI{
     private JLabel currentName, currentDOB, currentUsrID, currentUserName, currentUsrType, newName, newDOB, newPass;
     //Title Label for each Panel and instructions
     private JLabel instructEdit, modifyAcc, CurrAccInfo;
-    private JLabel errorDate, errorPass, errorName;
+    public JLabel errorDate, errorPass, errorName;
     public JTextField inputNewName, inputNewDOB;
     public JPasswordField inputNewPass;
     public JButton update, cancel;

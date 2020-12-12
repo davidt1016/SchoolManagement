@@ -12,7 +12,7 @@ import java.sql.*;
 
 
 public class AccountGUI extends JFrame {
-    Connection con;
+    public Connection con;
     PreparedStatement pst;
     Statement st;
 
@@ -26,7 +26,16 @@ public class AccountGUI extends JFrame {
     private Boolean isValidType = false;
     private String[] UserType = {"----------------","Students", "Teachers"};
     public JComboBox usrT;
-    public Boolean isCreateAccount = false;
+
+    private Boolean isCreateAccount = false;
+
+    public Boolean getCreateAccount() {
+        return isCreateAccount;
+    }
+
+    public void setCreateAccount(Boolean createAccount) {
+        isCreateAccount = createAccount;
+    }
 
 
     private static Container frame;
@@ -36,7 +45,7 @@ public class AccountGUI extends JFrame {
     //Textfields
     private static JLabel account, instruct, firstName, lastName, usrName, password ,confirmPass, usrType, dateofBirth;
     //For error messages
-    private static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName, errorUserExsists;
+    public static JLabel errorMessages, errorDate, errorUsrName, errorUsrType, errorPass, errorfirstName, errorLastName, errorUserExsists;
 
     //User Inputs
     public static JTextField inputUsr, inputFirst, inputLast, InputdateofBirth;
@@ -216,6 +225,8 @@ public class AccountGUI extends JFrame {
 
         //Cancel Button-Return back to login Screen
         cancel = new JButton("Cancel");
+        cancel.setBackground(new Color (25,100,205));
+        cancel.setForeground(Color.white);
         //If Cancel Is pressed then return to Login Screen
         cancel.addActionListener(new ActionListener() {
             @Override
@@ -231,10 +242,13 @@ public class AccountGUI extends JFrame {
 
         //Create Button for creating an Account
         create = new JButton("CREATE");
+        create.setBackground(new Color (25,100,205));
+        create.setForeground(Color.white);
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                isCreateAccount = false;
                 //Creating Boolean for validating inputs
                 Boolean isValidFirst = false;
                 Boolean isValidLast = false;
@@ -254,8 +268,7 @@ public class AccountGUI extends JFrame {
                     //Non-empty inputs
                     else
                     {
-                        //Account creation is true=> for later window Listener usage
-                        isCreateAccount = true;
+
                         //Retreiveing the JTextfield data and store it
                         String dateIn = InputdateofBirth.getText();
                         String subInputUsrName = " ";
@@ -400,9 +413,11 @@ public class AccountGUI extends JFrame {
 
                     }
                     //Verfying every user input is correct, if so, connect to the database and store data and return to the login screen
-                    if( isCreateAccount &&  isValidBdate && isValidPass
+                    if(   isValidBdate && isValidPass
                             && isValidUsrName &&  isValidLast && isValidFirst && isValidType)
                     {
+                        //Account creation is true=> for later window Listener usage
+                        isCreateAccount = true;
                         //-----------Connection with the Database------------
                         //Adding data to the database
                         try {

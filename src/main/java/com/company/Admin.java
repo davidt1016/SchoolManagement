@@ -16,10 +16,10 @@ import java.util.Vector;
 
 public class Admin extends JFrame implements UserInterfaceGUI {
     //connection paramteres
-    Connection con;
-    PreparedStatement pst;
-    PreparedStatement pst2;
-    Statement st, st2;
+   public Connection con;
+    public PreparedStatement pst;
+    public PreparedStatement pst2;
+    public Statement st, st2;
 
     //Jlist to display search results
     private static JList resultList;
@@ -28,21 +28,23 @@ public class Admin extends JFrame implements UserInterfaceGUI {
     private static Container frame;
     private ImageIcon icon;
     private static JLabel label, title, searchUsrName, instructions, confirmSelectionL;
-    public static JTextField inputUsrName;
+    private static JTextField inputUsrName;
     public static JButton  editInfo, editRecords, editCourse, logoffNCancel, changePass, cancelPass, updatePass;
     private static JPanel panel, accountPanel, recordPanel;
     //for password interfaces
-    private static JLabel PassInst, currPass, newPass, confirmPass, errorPass;
+    public static JLabel PassInst, currPass, newPass, confirmPass, errorPass;
     public static JPasswordField inputCurr, inputNewPass, inputConfirmPass;
     protected String newPassW = " ";
     private String userN = " ";
-    private String inUsrname = " ";
+    protected String inUsrname = " ";
 
     private String selectedName = "";
     private String selectedType = "";
     private String currPassS;
     private String foundID = "";
-    private int teacherID =0;
+    protected int teacherID =0;
+
+    public boolean isEnteredPassCorrect;
 
     @Override
     public void setusrN(String userName) {
@@ -232,6 +234,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                                 pst2.setString(2, userN );
                                 pst2.setString(1, newpassS);
                                 pst2.executeUpdate();
+                                isEnteredPassCorrect = true;
                                 JOptionPane.showMessageDialog(frame, "Update Password Successfully!");
                             }catch (SQLException other_SQLException){
                                 other_SQLException.printStackTrace();
@@ -239,6 +242,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
 
                         }
                         else{
+                            isEnteredPassCorrect = false;
                             System.out.print("Current Password Doesn't Match Our Records ");
                             JOptionPane.showMessageDialog(frame, "Wrong Password Entered!");
                         }
@@ -388,6 +392,7 @@ public class Admin extends JFrame implements UserInterfaceGUI {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         //For editing performance for students
+                        dispose();
                         SearchGUI sG = new SearchGUI("ALL",selectedName, "BOTH");
                         dispose();
                     }
@@ -563,21 +568,21 @@ public class Admin extends JFrame implements UserInterfaceGUI {
         public void windowOpened(WindowEvent e) { }
         @Override
         public void windowClosing(WindowEvent e) {
-            int output = JOptionPane.showConfirmDialog(frame , "Are you sure you want to exit?", null , JOptionPane.YES_OPTION);
-            //For sure for closing and exiting the program
-            if(output == JOptionPane.YES_OPTION)
-            {
-                JOptionPane.showMessageDialog(null , "Exiting.....");
-                //Exit the program
-                System.exit(1);
-            }
-            //"No" option: remain in the same interface.
-            else{
-                Admin administrator = new Admin();
-                administrator.DisplayUserGUI(userN);
-                dispose();
-
-            }
+//            int output = JOptionPane.showConfirmDialog(frame , "Are you sure you want to exit?", null , JOptionPane.YES_OPTION);
+//            //For sure for closing and exiting the program
+//            if(output == JOptionPane.YES_OPTION)
+//            {
+//                JOptionPane.showMessageDialog(null , "Exiting.....");
+//                //Exit the program
+//                System.exit(1);
+//            }
+//            //"No" option: remain in the same interface.
+//            else{
+//                Admin administrator = new Admin();
+//                administrator.DisplayUserGUI(userN);
+//                dispose();
+//
+//            }
         }
         @Override
         public void windowClosed(WindowEvent e) {

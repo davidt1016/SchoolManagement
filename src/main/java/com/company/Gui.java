@@ -14,15 +14,15 @@ public class Gui extends JFrame{
     PreparedStatement pst;
     Statement st;
     private static JLabel l_title,l_user,l_pass,l_image;
-    private static JTextField tf_user;
-    private static JButton b_login,b_register;
+    public static JTextField tf_user;
+    public static JButton b_login,b_register;
     private ImageIcon icon;
-    private static JPasswordField pass;
-    private static JLabel err_user,err_pass;
+    public static JPasswordField pass;
+    public static JLabel err_user,err_pass;
     Container f;
     private String usernameS ,password;
 
-    Gui(){
+    public Gui(){
         //Use Java Swing to create an input GUI
         //Create instance of JFrame
         //JFrame f=new JFrame("Login Screen");

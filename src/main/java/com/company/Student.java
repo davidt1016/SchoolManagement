@@ -2,6 +2,9 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,33 +15,49 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class Student extends JFrame implements UserInterfaceGUI {
-    Connection con;
-    PreparedStatement pst;
-    Statement st;
+    public Connection con;
+    public PreparedStatement pst;
+    public Statement st;
     //Dynamic Array for Storing All the Possible Courses for each Student
     private Vector <String> courseEnrolled = new Vector<String>();
     //For selecting the course
-    private static JComboBox coursesOptions;
-    private static JComboBox courseOptionsAttendance;
+    public static JComboBox coursesOptions;
+    public static JComboBox courseOptionsAttendance;
 
     //For Account Panel
-    private static JLabel l_image,l_atitle,l_id,l_name,l_username,l_dob,l_usertype, l_currentpass, l_newpass,l_confirmpass,errorPass;
-    public static JPasswordField currentpass, newpass,confirmpass;
+    private static JLabel l_image;
+    private static JLabel l_atitle;
+    private static JLabel l_id;
+    private static JLabel l_name;
+    private static JLabel l_username;
+    private static JLabel l_dob;
+    private static JLabel l_usertype;
+    private static JLabel l_currentpass;
+    private static JLabel l_newpass;
+    private static JLabel l_confirmpass;
+    public static JLabel errorPass;
+    public static JPasswordField currentpass;
+    public static JPasswordField newpass;
+    public static JPasswordField confirmpass;
     private ImageIcon icon, refreshIcon;
     public static JButton b_logoff,b_updatepass,b_confirm,b_cancel;
-    private String newPassWord;
+    protected String newPassWord;
 
     //For Grade interface
-    private static JLabel  CourseGrade, emptyRecord, grade, overallGPA;
-    private static JButton overallG, refreshG, enrol;
+    private static JLabel  CourseGrade;
+    public static JLabel emptyRecord;
+    private static JLabel grade;
+    public static JLabel overallGPA;
+    public static JButton overallG, refreshG, enrol;
     //Verifying a course has been selected for Grade panel
     private Boolean isCourseGradeSelected = false;
+
     private Boolean isSelectedAllGrade = false;
     private Boolean isSelectedAllAtten = false;
     private String GrCourse = " ";
     //For Attendance Panel
-    private static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
-    private static JButton refreshA;
+    public static JLabel attendanceTitle, CourseAttendance, emptyAttendanceRecord;
+    public static JButton refreshA;
     //Verifying a course has been selected for Attendance panel
     private Boolean isCourseAttendanceSelected = false;
     private String AttCourse = " ";
@@ -46,7 +65,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private String[] GrCourseParts;
     //For storing usrname
     private String usrN = " ";
-    Container f;
+    public Container f;
     private String PID;
     private String SID;
     private String Name;
@@ -61,7 +80,9 @@ public class Student extends JFrame implements UserInterfaceGUI {
     private String Course;
     private String CourseID;
     private String Grade;
-    private String cGPA_s = "";
+    public String cGPA_s = "";
+
+    public boolean isEnteredPassCorrect;
 
     //Setter and getter for userName
     //Setter for UserName
@@ -324,6 +345,7 @@ public class Student extends JFrame implements UserInterfaceGUI {
                         //updating password in database
                         if(currentpassS.equals(currPass)){
                             try{
+                                isEnteredPassCorrect = true;
                                 pst = con.prepareStatement("UPDATE SMSSytem.Users SET password = ? where username = ?");
                                 pst.setString(2, usrN );
                                 pst.setString(1, newpassS);
@@ -335,8 +357,12 @@ public class Student extends JFrame implements UserInterfaceGUI {
 
                         }
                         else{
+
+                            isEnteredPassCorrect = false;
                             System.out.print("Current Password Doesn't Match Our Records ");
                             JOptionPane.showMessageDialog(f, "Wrong Password Entered!");
+
+
                         }
 
 

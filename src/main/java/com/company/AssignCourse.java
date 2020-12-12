@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class AssignCourse extends JFrame {
     //Variable Initializations
-    Connection con;
+    public Connection con;
     PreparedStatement pst;
     PreparedStatement pst2;
     Statement st;
@@ -24,7 +24,7 @@ public class AssignCourse extends JFrame {
     public static JTextField courseSearch;
     private static JList resultList;
     private int teacherID = 0;
-    private  String selectedCourse;
+    public String selectedCourse;
     private boolean isAddCourse;
     private int SN;
 
@@ -39,7 +39,7 @@ public class AssignCourse extends JFrame {
     {
         return teacherID;
     }
-    AssignCourse( int TeacherID)
+    public AssignCourse( int TeacherID)
     {
 
         teacherID = TeacherID;
@@ -192,12 +192,13 @@ public class AssignCourse extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //---------------------Connection for database-----------------
                 //Assigning instructors to courses
-                try{
+                try {
                     pst2 = con.prepareStatement("UPDATE SMSSytem.Course SET Teacher_ID = ? where Course_ID = ?");
                     pst2.setString(1, Integer.toString(teacherID));
                     pst2.setString(2, selectedCourse.split(":")[0]);
                     pst2.executeUpdate();
-                    JOptionPane.showMessageDialog(frame, "Course Assigned Successfully!");
+                    //isAddCourse = true;
+                    //JOptionPane.showMessageDialog(frame, "Course Assigned Successfully!");
                     Admin t = new Admin();
                     t.DisplayUserGUI("Admin");
                     dispose();

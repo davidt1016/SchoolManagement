@@ -44,14 +44,14 @@ import javax.swing.event.ListSelectionListener;
 import static java.lang.Integer.parseInt;
 
 public class SearchGUI extends JFrame{
-    Connection con;
+    public Connection con;
     PreparedStatement pst;
     PreparedStatement pst2;
     Statement st;
 
     //Variable Initializations
     Container f;
-    private static JLabel title,l_search, confirmSelectionL, l_grade, l_attendance, selectCourse, errorAttendance, errorGrade;
+    public static JLabel title,l_search, confirmSelectionL, l_grade, l_attendance, selectCourse, errorAttendance, errorGrade;
     public static JTextField tf_search, tf_gr, tf_att, inputCourse;
     private static JPanel panel, backgroundPanel;
     public static JButton select, cancel;
@@ -65,6 +65,26 @@ public class SearchGUI extends JFrame{
 
     private static JList resultList;
     private String SID;
+
+    public boolean isGradeChanged() {
+        return isGradeChanged;
+    }
+
+    public void setGradeChanged(boolean gradeChanged) {
+        isGradeChanged = gradeChanged;
+    }
+
+    private boolean isGradeChanged;
+
+    public boolean isAttendanceChanged() {
+        return isAttendanceChanged;
+    }
+
+    public void setAttendanceChanged(boolean attendanceChanged) {
+        isAttendanceChanged = attendanceChanged;
+    }
+
+    private boolean isAttendanceChanged;
 
     //Setter and getter for userName
     //Setter for CourseName
@@ -109,7 +129,7 @@ public class SearchGUI extends JFrame{
     {
         return usrType;
     }
-    SearchGUI(String CourseName, String username, String chosenMode){
+    public SearchGUI(String CourseName, String username, String chosenMode){
         CourseN = " ";
         CourseN = CourseName;
         userN = username;
@@ -452,14 +472,15 @@ public class SearchGUI extends JFrame{
                             pst2.setString(3, CourseN);
                             //Execute the update on the database
                             pst2.executeUpdate();
+                            isGradeChanged = true;
                             if(mode != "BOTH") {
                                 Teacher T = new Teacher();
                                 T.DisplayUserGUI(userN);
                                 dispose();
                             }
                             else{
-                                Admin A = new Admin();
-                                A.DisplayUserGUI("Admin");
+                                //Admin ad = new Admin();
+                                //ad.DisplayUserGUI("Admin");
                                 dispose();
                             }
 
@@ -470,9 +491,9 @@ public class SearchGUI extends JFrame{
                         }
                         else
                         {
+                            isGradeChanged = false;
                             errorGrade.setText("<html><font color = 'red'>Error!! Input Grade Out of Range. Please Type in Value between 0 and 100. </font></html>");
                         }
-
                     }
                 }
                 //updating attendance
@@ -489,14 +510,15 @@ public class SearchGUI extends JFrame{
                                 pst2.setString(3, CourseN);
                                 //Execute the update on the database
                                 pst2.executeUpdate();
+                                isAttendanceChanged = true;
                                 if(mode != "BOTH") {
                                     Teacher T = new Teacher();
                                     T.DisplayUserGUI(userN);
                                     dispose();
                                 }
                                 else{
-                                    Admin A = new Admin();
-                                    A.DisplayUserGUI("Admin");
+                                    Admin ad = new Admin();
+                                    ad.DisplayUserGUI("Admin");
                                     dispose();
                                 }
 
@@ -506,6 +528,7 @@ public class SearchGUI extends JFrame{
                         }
                         else
                         {
+                            isAttendanceChanged = false;
                             errorAttendance.setText("<html><font color = 'red'>Error!! Input Attendance Out of Range. Please Type in Value between 0 and 365. </font></html>");
                         }
                     }
