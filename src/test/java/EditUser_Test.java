@@ -54,7 +54,7 @@ public class EditUser_Test {
 
     }
 
-    //Testing for wrong date of birth input
+    //Testing for wrong password
     @Test
     public void testcase3_EditUser() {
         EditUser e = new EditUser();

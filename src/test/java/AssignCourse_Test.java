@@ -42,43 +42,4 @@ public class AssignCourse_Test {
         assertEquals("MATH 101", foundName);
 
     }
-
-    //Checking assign course not equal to the the wrong course
-    @Test
-    public void testcase2_AssignCourse()
-    {
-        AssignCourse ai = new AssignCourse(2);
-
-        ai.setVisible(false);
-
-
-        String foundName = "";
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            ai.con = DriverManager.getConnection("jdbc:mysql://schoolms.cf6gf0mrmfjb.ca-central-1.rds.amazonaws.com:3306/SMSSytem", "admin", "rootusers");
-            PreparedStatement statement = ai.con.prepareStatement("SELECT Course_ID, Course_Name FROM SMSSytem.Course where (Teacher_ID = 1)");
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                foundName = rs.getString("Course_ID");
-            }
-        }catch (ClassNotFoundException classNotFoundException ) {
-            classNotFoundException.printStackTrace();
-        }catch (SQLException other_SQLException) {
-            other_SQLException.printStackTrace();
-        }
-
-
-        ai.courseSearch.setText("CHEM 100");
-        ai.selectedCourse = "CHEM 100";
-
-        //ai.enroll.doClick();
-        //------------------Retrieve Database-------------
-        //for assertEquals
-        //Because the account is already exist, so the expected value is false
-        assertNotEquals("CHEM 100", foundName);
-
-    }
-
 }
